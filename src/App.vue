@@ -1,32 +1,43 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <button @click="handleVideo">打开摄像头</button>
+    <video id="v" ref="video" :srcObject="this.videoInfo.srcObject"></video>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+export default {
+  data() {
+    return {
+      videoInfo: {
+        srcObject: ""
+      }
+    };
+  },
+  methods: {
+    handleVideo() {
+      let Media = navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+      Media.then(mediaStream => {
+        //成功时调用的callback函数
+        this.videoInfo.srcObject = mediaStream;
+        let videoObj = this.$refs.video;
+        videoObj.onloadedmetadata = function(e) {
+          video.play();
+        };
+      }).catch(err => {
+        //失败时调用的callback函数
+        console.log("The following error occurred: " + err.name);
+      });
     }
   }
-}
+};
+</script>
+
+<style lang="scss">
 </style>
