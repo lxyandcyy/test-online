@@ -22,12 +22,13 @@ export default {
           width: { ideal: 1280 },
           height: { ideal: 720 }
         }
-      });
+      }); 
       Media.then(mediaStream => {
         //成功时调用的callback函数
-        this.videoInfo.srcObject = mediaStream;
-        let videoObj = this.$refs.video;
-        videoObj.onloadedmetadata = function(e) {
+        let video = this.$refs.video;
+        video.srcObject = mediaStream
+        video.onloadedmetadata = function(e) {
+          
           video.play();
         };
       }).catch(err => {
