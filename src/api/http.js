@@ -36,10 +36,10 @@ export function get(url, params) {
  * @param {String} url [请求的url地址]
  * @param {Object} params [请求时携带的参数]
  */
-export function post(url, params) {
+export function post(url, body) {
   return new Promise((resolve, reject) => {
     axios
-      .post(API_PROXY + url, QS.stringify(params))
+      .post(url, body)
       .then(res => {
         resolve(res.data);
       })

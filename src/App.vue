@@ -38,53 +38,12 @@ import UpdateFace from "./components/UpdateFace";
 
 export default {
   data() {
-    return {
-      videoPlaying: false //是否开启摄像头
-    };
-  },
-  mounted() {
-    this.autoSize();
+    return {};
   },
   components: {
     Main: Main
   },
-  methods: {
-    autoSize() {},
-    openVideo() {
-      let Media = navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: {
-          width: { ideal: 500 },
-          height: { ideal: 200 }
-        }
-      });
-      Media.then(mediaStream => {
-        //成功时调用的callback函数
-        let videoObj = this.$refs.video;
-        videoObj.srcObject = mediaStream; //设置video的srcObject
-        videoObj.onloadedmetadata = e => {
-          videoObj.play();
-          this.videoPlaying = true;
-        };
-      }).catch(err => {
-        //失败时调用的callback函数
-        console.log("The following error occurred: " + err.message);
-      });
-    },
-    takePhoto() {
-      if (this.videoPlaying) {
-        let canvas = this.$refs.canvas;
-        let videoObj = this.$refs.video;
-        let photoObj = this.$refs.photo;
-
-        canvas.width = videoObj.videoWidth;
-        canvas.height = videoObj.videoHeight;
-        canvas.getContext("2d").drawImage(videoObj, 0, 0);
-        let dataURL = canvas.toDataURL("image/png"); //canvas转换成base64图片
-        photoObj.src = dataURL; //设置photo的src
-      }
-    }
-  }
+  methods: {}
 };
 </script>
 

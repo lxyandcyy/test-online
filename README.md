@@ -49,4 +49,8 @@ export const getApi = () =>
 https://blog.csdn.net/wandoumm/article/details/80280680
 https://juejin.im/post/5afd79aa6fb9a07ac162a540
 
+方法一（本项目已未使用）：
 使用代理解决跨域问题
+
+方法二：
+cors 框架
