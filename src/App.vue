@@ -18,15 +18,6 @@
       clickMode="push"
     >
     </vue-particles>
-    <!-- 
-    <button @click="openVideo">打开摄像头</button>
-    <button @click="takePhoto">拍照</button>
-
-    <video id="v" ref="video" style="width: 640px;height: 480px;"></video>
-    <canvas id="canvas" ref="canvas" style="display:none;"></canvas>
-    <br />
-    <img ref="photo" id="photo" alt="photo" /> -->
-
     <Main></Main>
   </div>
 </template>

@@ -35,9 +35,6 @@ export default {
    * @returns {-}
    */
   postRegFace(p) {
-    return post(
-      "https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/add",
-      p
-    );
+    return post("http://localhost:6001/user/regFace", p);
   }
 };

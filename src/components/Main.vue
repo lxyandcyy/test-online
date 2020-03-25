@@ -35,8 +35,7 @@ export default {
       alertCMA: false, //是否点击三个button中的一个
       alertLogin: false, //是否点击‘登录’
       alertRegister: false, //是否点击‘注册’
-      updateFace: false, //是否点击‘修改’
-      access_token: ""
+      updateFace: false //是否点击‘修改’
     };
   },
   components: {
@@ -52,7 +51,7 @@ export default {
         client_secret: "GzHQM5nrA1dbaQFPnXkOoM6IYBNhtXZ3"
       })
       .then(res => {
-        this.access_token = res.access_token;
+        this.$store.commit("updateAccessToken", res.access_token);
       });
   },
   methods: {
