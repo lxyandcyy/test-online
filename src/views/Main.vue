@@ -25,13 +25,14 @@
 </template>
 
 <script>
-import Login from "./Login";
-import Register from "./Register";
-import UpdateFace from "./UpdateFace";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
+import UpdateFace from "@/components/UpdateFace";
 
 export default {
   data() {
     return {
+      baiduDB: this.$store.state.baiduDB,
       alertCMA: false, //是否点击三个button中的一个
       alertLogin: false, //是否点击‘登录’
       alertRegister: false, //是否点击‘注册’
@@ -44,15 +45,10 @@ export default {
     UpdateFace: UpdateFace
   },
   created() {
-    this.$api
-      .getToken({
-        grant_type: "client_credentials",
-        client_id: "UwELvyWkz5Q9rFZx8uIc0Qi5",
-        client_secret: "GzHQM5nrA1dbaQFPnXkOoM6IYBNhtXZ3"
-      })
-      .then(res => {
-        this.$store.commit("updateAccessToken", res.access_token);
-      });
+    // 获取access_token
+    this.$api.getToken(this.baiduDB).then(res => {
+      this.$store.commit("updateAccessToken", res.access_token);
+    });
   },
   methods: {
     AlertRegPage() {
@@ -86,8 +82,6 @@ $div-count: 6;
   height: $login-height;
   background: rgba(118, 20, 31, 0.8);
   color: white;
-  // display: grid;
-  // grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   margin: 0 auto;
 
   // #first,

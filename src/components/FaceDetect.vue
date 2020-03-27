@@ -4,15 +4,7 @@
     <div>
       <span id="ts" ref="ts">{{ detectTips }}</span>
     </div>
-    <canvas
-      id="canvas"
-      ref="canvas"
-      width="200"
-      height="200"
-      v-show="false"
-    ></canvas>
-    <!-- 加载动画 -->
-    <!-- <a-button @click="success">Display a loading indicator</a-button> -->
+    <canvas id="canvas" ref="canvas" width="200" height="200" v-show="false"></canvas>
   </div>
 </template>
 
@@ -73,6 +65,9 @@ export default {
         case "register":
           this.RegFace(base64_img);
           break;
+        case "update-face":
+          this.UpdateFace(base64_img);
+          break;
       }
     },
     RegFace(base64_img) {
@@ -88,10 +83,8 @@ export default {
           switch (res.error_code) {
             case 0:
               this.detectTips = "人脸绑定成功！";
-              // 跳转到上一级页面。。。。
-              setTimeout(() => {
-                this.$emit("changeIsInfo", true);
-              }, 2000);
+              // 跳转到Main页面。。。。
+              this.goBack();
               break;
             case 2213105:
               this.detectTips = "该账号已经绑定过人脸啦~";
@@ -114,7 +107,6 @@ export default {
         });
     },
     Login(base64_img) {
-      console.log("执行login函数");
       this.$api
         .Login({
           group_id_list: "admin",
@@ -147,9 +139,36 @@ export default {
         })
         .catch(error => console.log(error));
     },
+    UpdateFace(base64_img) {
+      this.$api
+        .ChangeFace({
+          user_id: this.user_id,
+          group_id: "admin",
+          access_token: this.access_token,
+          image_type: "BASE64",
+          image: base64_img
+        })
+        .then(res => {
+          switch (res.error_code) {
+            case 0:
+              console.log("asdfas");
+              this.detectTips = "人脸修改成功！";
+              // 跳转到Main页面。。。。
+              this.goBack();
+              break;
+            case 222001:
+              this.dengdai("没有检测到人脸，正在重新检测。。");
+              break;
+          }
+        })
+        .catch(error => console.log(error));
+    },
     convertImageToBase64(canvas) {
       var img = canvas.toDataURL("image/jpeg", 0.92);
       return img;
+    },
+    goBack() {
+      location.reload(); //刷新页面，相当于跳转到Main页面
     }
   },
   props: ["father"]

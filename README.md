@@ -49,8 +49,10 @@ export const getApi = () =>
 https://blog.csdn.net/wandoumm/article/details/80280680
 https://juejin.im/post/5afd79aa6fb9a07ac162a540
 
-方法一（本项目已未使用）：
+方法一：
 使用代理解决跨域问题
+
+我把我的 node 后端作为代理服务器，通过后端去调用百度 API 从而解决了跨域
 
 方法二：
 cors 框架

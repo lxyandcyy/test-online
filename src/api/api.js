@@ -17,12 +17,21 @@ export default {
   },
 
   /**
-   * 用户注册
+   * 用户注册信息
    * @param {String、Number、特殊字符、无空格} user_id [用户名]
    * @param {String、Number、特殊字符、无空格} password [密码]
    */
   postRegInfo(p) {
     return post("http://localhost:6001/user/regInfo", p);
+  },
+
+  /**
+   * 用户账号密码验证
+   * @param {String、Number、特殊字符、无空格} user_id [用户名]
+   * @param {String、Number、特殊字符、无空格} password [密码]
+   */
+  postDetectInfo(p) {
+    return post("http://localhost:6001/user/detectInfo", p);
   },
 
   /**
@@ -49,5 +58,18 @@ export default {
    */
   Login(p) {
     return post("http://localhost:6001/user/Login", p);
+  },
+
+  /**
+   * 人脸修改
+   * @param {String、Number、特殊字符、无空格} user_id [用户名]
+   * @param {-} group_id [用户组]
+   * @param {-} access_token [验证]
+   * @param {-} image_type [图片类型] Base64或其他
+   * @param {-} image [图片]
+   * @returns {-}
+   */
+  ChangeFace(p) {
+    return post("http://localhost:6001/user/changeFace", p);
   }
 };

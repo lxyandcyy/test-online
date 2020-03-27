@@ -13,7 +13,11 @@
       <div class="bt">
         <button @click="Register()">点击绑定人脸</button>
       </div>
+      <div class="bt">
+        <button @click="goBack()">返回</button>
+      </div>
     </div>
+    <!-- 人脸绑定页 -->
     <div id="face-from" v-if="!isInfo">
       <div>
         <strong>绑定人脸</strong>
@@ -53,19 +57,22 @@ export default {
           password: this.password
         })
         .then(res => {
-          //如果用户注册成功
-          if (res.state == 200) {
-            this.isInfo = false; //跳转到‘人脸绑定’页
-            this.$message.success(`${res.msg}`);
-          }
-          // 如果用户注册失败
-          else if (res.state == 400) {
-            this.$message.error(`${res.msg}`);
+          switch (res.state) {
+            case 200:
+              this.isInfo = false; //跳转到‘人脸绑定’页
+              this.$message.success(`${res.msg}`); //用户注册成功！
+              break;
+            case 400:
+              this.$message.error(`${res.msg}`); //用户注册失败！
+              break;
           }
         });
     },
     ChangeIsInfo(p) {
       this.isInfo = p;
+    },
+    goBack() {
+      location.reload(); //刷新页面，相当于跳转到Main页面
     }
   }
 };

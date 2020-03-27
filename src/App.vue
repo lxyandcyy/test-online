@@ -16,14 +16,13 @@
       hoverMode="grab"
       :clickEffect="true"
       clickMode="push"
-    >
-    </vue-particles>
+    ></vue-particles>
     <Main></Main>
   </div>
 </template>
 
 <script>
-import Main from "./components/Main";
+import Main from "@/views/Main";
 import Register from "./components/Register";
 import UpdateFace from "./components/UpdateFace";
 
