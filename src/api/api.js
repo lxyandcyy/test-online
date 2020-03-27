@@ -36,5 +36,18 @@ export default {
    */
   postRegFace(p) {
     return post("http://localhost:6001/user/regFace", p);
+  },
+
+  /**
+   * 人脸登录
+   * @param {String、Number、特殊字符、无空格} user_id [用户名]
+   * @param {-} group_id_list [用户组]
+   * @param {-} access_token [验证]
+   * @param {-} image_type [图片类型] Base64或其他
+   * @param {-} image [图片]
+   * @returns {-} error_code  score
+   */
+  Login(p) {
+    return post("http://localhost:6001/user/Login", p);
   }
 };
