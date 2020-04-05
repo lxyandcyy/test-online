@@ -4,7 +4,13 @@
     <div>
       <span id="ts" ref="ts">{{ detectTips }}</span>
     </div>
-    <canvas id="canvas" ref="canvas" width="200" height="200" v-show="false"></canvas>
+    <canvas
+      id="canvas"
+      ref="canvas"
+      width="200"
+      height="200"
+      v-show="false"
+    ></canvas>
   </div>
 </template>
 
@@ -121,6 +127,9 @@ export default {
               if (score >= 90) {
                 this.detectTips = "登录成功";
                 // 跳转到内容主界面
+                router.push({
+                  path: "/layout/manage-user"
+                });
               } else if (score >= 60 && score < 90) {
                 this.detectTips = "没有匹配到相应用户，请先注册";
                 // 跳转到上一级页面(Main)。。。。
@@ -176,16 +185,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#v {
-  border-radius: 50%;
-}
+#face-detect {
+  color: rgb(255, 195, 0);
+  #v {
+    border-radius: 50%;
+  }
 
-#canvas {
-  z-index: -1;
-  position: absolute;
-}
+  #canvas {
+    z-index: -1;
+    position: absolute;
+  }
 
-#ts {
-  float: right;
+  #ts {
+    float: right;
+  }
 }
 </style>

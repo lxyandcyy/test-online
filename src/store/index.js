@@ -13,7 +13,9 @@ export default new Vuex.Store({
     access_token: "",
     user: {
       user_id: "",
-      password: ""
+      password: "",
+      user_type: "user",
+      reg_time: ""
     }
   },
   mutations: {
@@ -21,7 +23,13 @@ export default new Vuex.Store({
       state.access_token = value;
     },
     updateUser(state, obj) {
-      [state.user.user_id, state.user.password] = [obj.user_id, obj.password];
+      [state.user.user_id, state.user.password, state.user.user_type] = [
+        obj.user_id,
+        obj.password,
+        obj.user_type,
+        obj.reg_address,
+        obj.reg_time
+      ];
     }
   },
   actions: {},

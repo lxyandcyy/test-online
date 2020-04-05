@@ -2,7 +2,6 @@
  * api接口统一管理
  */
 import { get, post } from "./http";
-// import Qs from "Qs";
 
 export default {
   /**
@@ -13,13 +12,15 @@ export default {
    * @returns {-} access_token
    */
   getToken(g) {
-    return get("https://aip.baidubce.com/oauth/2.0/token", g);
+    return post("http://localhost:6001/user/getToken", g);
   },
 
   /**
    * 用户注册信息
    * @param {String、Number、特殊字符、无空格} user_id [用户名]
    * @param {String、Number、特殊字符、无空格} password [密码]
+   * @param {String} user_type [用户类型] 管理员or普通用户
+   *
    */
   postRegInfo(p) {
     return post("http://localhost:6001/user/regInfo", p);

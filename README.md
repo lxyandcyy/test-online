@@ -56,3 +56,34 @@ https://juejin.im/post/5afd79aa6fb9a07ac162a540
 
 方法二：
 cors 框架
+
+## 事件委托
+
+用事件委托的方式个父节点添加 click 事件，使得各个子节点都有该事件
+
+<image src='https://s1.ax1x.com/2020/04/02/GJVqw8.png' />
+<image src='https://s1.ax1x.com/2020/04/02/GJZEY4.png' />
+
+```javascript
+methods: {
+    ToggleModule(e) {
+      switch (e.key) {
+        case 1:
+          router.push({ path: "/layout/manage-user" });
+          break;
+        case 2:
+          router.push({ path: "/layout/question-back" });
+          break;
+        case 3:
+          router.push({ path: "/layout/paper-bank" });
+          break;
+        case 4:
+          router.push({ path: "/layout/all-grade" });
+          break;
+        case 5:
+          router.push({ path: "/layout/paper-grade" });
+          break;
+      }
+    }
+  }
+```
