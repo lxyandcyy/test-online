@@ -5,10 +5,18 @@
         <strong>人脸注册</strong>
       </div>
       <div class="bt">
-        <input type="text" placeholder="请输入用户名" v-model="user_info.user_id" />
+        <input
+          type="text"
+          placeholder="请输入用户名"
+          v-model="user_info.user_id"
+        />
       </div>
       <div class="bt">
-        <input type="password" placeholder="请输入密码" v-model="user_info.password" />
+        <input
+          type="password"
+          placeholder="请输入密码"
+          v-model="user_info.password"
+        />
       </div>
       <div>
         <a-radio-group @change="onChange" v-model="value">
@@ -35,7 +43,7 @@
 
 <script>
 import FaceDetect from "./FaceDetect";
-import { onChange } from "../../../utils/Main页面/ass.js";
+// import { onChange } from "../../../utils/Main页面/ass.js";
 
 export default {
   data() {

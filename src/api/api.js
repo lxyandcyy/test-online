@@ -2,75 +2,23 @@
  * api接口统一管理
  */
 import { get, post } from "./http";
+import user from "./user";
+import question from "./question";
 
 export default {
-  /**
-   * 获取access_Token
-   * @param {-} grant_type []
-   * @param {-} client_id []
-   * @param {-} client_secret []
-   * @returns {-} access_token
-   */
-  getToken(g) {
-    return post("http://localhost:6001/user/getToken", g);
-  },
+  // user_info表相关、登录注册相关操作
+  getToken: user.getToken, //获取access_Token
+  postRegInfo: user.postRegInfo, // 用户注册信息
+  postDetectInfo: user.postDetectInfo, //用户账号密码验证
+  postRegFace: user.postRegFace, //用户人脸绑定注册
+  Login: user.Login, //人脸登录
+  ChangeFace: user.ChangeFace, //人脸修改
+  AllUserInfo: user.AllUserInfo, //所有用户列表
 
-  /**
-   * 用户注册信息
-   * @param {String、Number、特殊字符、无空格} user_id [用户名]
-   * @param {String、Number、特殊字符、无空格} password [密码]
-   * @param {String} user_type [用户类型] 管理员or普通用户
-   *
-   */
-  postRegInfo(p) {
-    return post("http://localhost:6001/user/regInfo", p);
-  },
-
-  /**
-   * 用户账号密码验证
-   * @param {String、Number、特殊字符、无空格} user_id [用户名]
-   * @param {String、Number、特殊字符、无空格} password [密码]
-   */
-  postDetectInfo(p) {
-    return post("http://localhost:6001/user/detectInfo", p);
-  },
-
-  /**
-   * 用户人脸绑定注册
-   * @param {String、Number、特殊字符、无空格} user_id [用户名]
-   * @param {-} group_id [用户组]
-   * @param {-} access_token [验证]
-   * @param {-} image_type [图片类型] Base64或其他
-   * @param {-} image [图片]
-   * @returns {-}
-   */
-  postRegFace(p) {
-    return post("http://localhost:6001/user/regFace", p);
-  },
-
-  /**
-   * 人脸登录
-   * @param {String、Number、特殊字符、无空格} user_id [用户名]
-   * @param {-} group_id_list [用户组]
-   * @param {-} access_token [验证]
-   * @param {-} image_type [图片类型] Base64或其他
-   * @param {-} image [图片]
-   * @returns {-} error_code  score
-   */
-  Login(p) {
-    return post("http://localhost:6001/user/Login", p);
-  },
-
-  /**
-   * 人脸修改
-   * @param {String、Number、特殊字符、无空格} user_id [用户名]
-   * @param {-} group_id [用户组]
-   * @param {-} access_token [验证]
-   * @param {-} image_type [图片类型] Base64或其他
-   * @param {-} image [图片]
-   * @returns {-}
-   */
-  ChangeFace(p) {
-    return post("http://localhost:6001/user/changeFace", p);
-  }
+  // t_quetion表相关操作
+  QueList: question.QueList, //获取所有题目
+  AddQue: question.AddQue, //新增题目
+  SelQue: question.SelQue, //预览题目
+  EditQue: question.EditQue,
+  DelQue: question.DelQue
 };

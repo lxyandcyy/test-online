@@ -1,5 +1,6 @@
 <template>
   <div id="layout">
+    <!-- 管理员系统的layout页面 -->
     <a-layout id="components-layout-demo-side" style="min-height: 100vh">
       <!-- 左侧导航栏 -->
       <a-layout-sider collapsible v-model="collapsed">
@@ -10,24 +11,38 @@
           mode="inline"
           @click="ToggleModule($event)"
         >
-          <a-menu-item key="1">
-            <a-icon type="user" />
-            <span>用户管理</span>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <a-icon type="desktop" />
-            <span>题库管理</span>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <a-icon type="desktop" />
-            <span>试卷管理</span>
-          </a-menu-item>
+          <a-menu-item key="1">主页</a-menu-item>
           <a-sub-menu key="sub1">
-            <span slot="title"
-              ><a-icon type="pie-chart" /><span>考试结果分析</span></span
-            >
-            <a-menu-item key="4">用户成绩分析</a-menu-item>
-            <a-menu-item key="5">试卷成绩分析</a-menu-item>
+            <span slot="title">
+              <a-icon type="desktop" />
+              <span>用户管理</span>
+            </span>
+            <a-menu-item key="2">学生列表</a-menu-item>
+            <a-menu-item key="3">管理员列表</a-menu-item>
+          </a-sub-menu>
+          <a-sub-menu key="sub2">
+            <span slot="title">
+              <a-icon type="desktop" />
+              <span>题库管理</span>
+            </span>
+            <a-menu-item key="4">题库列表</a-menu-item>
+            <a-menu-item key="5">新增题目</a-menu-item>
+          </a-sub-menu>
+          <a-sub-menu key="sub3">
+            <span slot="title">
+              <a-icon type="desktop" />
+              <span>试卷管理</span>
+            </span>
+            <a-menu-item key="6">试卷列表</a-menu-item>
+            <a-menu-item key="7">新增试卷</a-menu-item>
+          </a-sub-menu>
+          <a-sub-menu key="sub4">
+            <span slot="title">
+              <a-icon type="pie-chart" />
+              <span>考试结果分析</span>
+            </span>
+            <a-menu-item key="8">用户成绩分析</a-menu-item>
+            <a-menu-item key="9">试卷成绩分析</a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
@@ -43,9 +58,7 @@
             <router-view></router-view>
           </div>
         </a-layout-content>
-        <a-layout-footer style="text-align: center">
-          在线测试系统 ©2020 Created by lxy
-        </a-layout-footer>
+        <a-layout-footer style="text-align: center">在线测试系统 ©2020 Created by lxy</a-layout-footer>
       </a-layout>
     </a-layout>
   </div>
@@ -72,18 +85,30 @@ export default {
     ToggleModule(e) {
       switch (e.key) {
         case "1":
-          this.$router.push({ path: "/layout/manage-user" });
+          this.$router.push({ path: "/layout/home" });
           break;
         case "2":
-          this.$router.push({ path: "/layout/question-bank" });
+          this.$router.push({ path: "/layout/student" });
           break;
         case "3":
-          this.$router.push({ path: "/layout/paper-bank" });
+          this.$router.push({ path: "/layout/admin" });
           break;
         case "4":
-          this.$router.push({ path: "/layout/all-grade" });
+          this.$router.push({ path: "/layout/question-bank" });
           break;
         case "5":
+          this.$router.push({ path: "/layout/add-question" });
+          break;
+        case "6":
+          this.$router.push({ path: "/layout/paper-bank" });
+          break;
+        case "7":
+          this.$router.push({ path: "/layout/add-paper" });
+          break;
+        case "8":
+          this.$router.push({ path: "/layout/all-grade" });
+          break;
+        case "9":
           this.$router.push({ path: "/layout/paper-grade" });
           break;
       }
