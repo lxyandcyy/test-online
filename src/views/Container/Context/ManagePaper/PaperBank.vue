@@ -94,14 +94,14 @@ export default {
     deletePaper(row) {
       let Id = row.id;
       console.log("点击删除的item", row);
-      // this.$api.DelQue({ id: Id }).then(res => {
-      //   if (res.state === 200) {
-      //     this.data = this.data.filter(item => item.id !== Id); // 删除指定id题目
-      //     this.$message.success(res.msg);
-      //   } else {
-      //     this.$message.error(res.msg);
-      //   }
-      // });
+      this.$api.DelPaper({ id: Id }).then(res => {
+        if (res.state === 200) {
+          this.data = this.data.filter(item => item.id !== Id); // 删除指定id题目
+          this.$message.success(res.msg);
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
     }
   }
 };

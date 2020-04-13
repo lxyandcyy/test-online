@@ -28,17 +28,22 @@
           v-if="form.questionItems.length !== 0"
         >
           <el-form-item
-            :key="questionIndex"
-            :label="'题目' + (questionIndex + 1) + '：'"
-            v-for="(questionItem, questionIndex) in form.questionItems"
+            :key="index"
+            :label="'题目' + (index + 1) + '：'"
+            v-for="(item, index) in form.questionItems"
             style="margin-bottom: 15px"
           >
             <el-row>
               <el-col :span="23">
-                <QuestionShow :question="questionItem" />
+                <QuestionShow :question="item" />
               </el-col>
               <el-col :span="1">
-                <el-button type="text" size="mini">删除 </el-button>
+                <el-button
+                  type="text"
+                  size="mini"
+                  @click="form.questionItems.splice(index, 1)"
+                  >删除</el-button
+                >
               </el-col>
             </el-row>
           </el-form-item>
@@ -121,10 +126,10 @@ export default {
       .then(res => {
         console.log("当前编辑的试卷初始数据是：", res);
         this.form = {
-          id: res.id,
-          subject_id: res.subject_id,
-          name: res.name,
-          countdown: res.countdown,
+          id: res.pap.id,
+          subject_id: res.pap.subject_id,
+          name: res.pap.name,
+          countdown: res.pap.countdown,
           questionItems: res.questionItems
         };
         console.log(this.form);
@@ -165,37 +170,6 @@ export default {
     };
   },
   methods: {
-    //提交新编辑好的题目数据
-    // submitForm() {
-    //   //题目最新编辑时间=当前提交时间
-    //   this.form.create_time = Date.now();
-
-    //   this.$refs.form.validate(valid => {
-    //     //如果表单填写完整
-    //     if (valid) {
-    //       this.$api
-    //         .EditQue(this.form)
-    //         .then(res => {
-    //           console.log(res);
-    //           this.$message.success("题目编辑成功！");
-    //           //   跳转到‘题库列表’页面
-    //           this.$router.push({ path: "/layout/question-bank" });
-    //         })
-    //         .catch(e => {
-    //           console.log(e);
-    //           this.$message.error({ content: "题目提交失败，请检查网络！" });
-    //         });
-    //     } else {
-    //       this.$message.info("请把表单填写完整！");
-    //       return false;
-    //     }
-    //   });
-    // },
-    // 重置
-    resetForm() {
-      this.$refs["form"].resetFields();
-    },
-
     addQuestion() {
       this.search();
       this.questionPage.showDialog = true;
@@ -212,6 +186,23 @@ export default {
         this.questionPage.listLoading = false;
       });
     },
+    // 重置
+    resetForm() {
+      this.$refs["form"].resetFields();
+    },
+    // 查询
+    queryForm() {},
+    //题目选择复选框改变时
+    handleSelectionChange(val) {
+      this.questionPage.multipleSelection = val;
+      console.log(val);
+    },
+    confirmQuestionSelect() {
+      this.questionPage.multipleSelection.forEach(q => {
+        this.form.questionItems.push(q);
+      });
+      this.questionPage.showDialog = false;
+    },
     submitForm() {
       //题目创建时间=当前提交时间
       this.form.create_time = Date.now();
@@ -220,27 +211,23 @@ export default {
         //如果表单填写完整
         if (valid) {
           this.$api
-            .AddQue(this.form)
+            .EditPaper(this.form)
             .then(res => {
               console.log(res);
-              this.$message.success("题目新增成功！");
-              //   跳转到‘题库列表’页面
-              this.$router.push({ path: "/layout/question-bank" });
+              this.$message.success("试卷编辑成功！");
+              //   跳转到‘试卷列表’页面
+              this.$router.push({ path: "/layout/paper-bank" });
             })
             .catch(e => {
               console.log(e);
-              this.$message.error({ content: "题目提交失败，请检查网络！" });
+              this.$message.error({ content: "编辑试卷失败，请检查网络！" });
             });
         } else {
           this.$message.info("请把表单填写完整！");
           return false;
         }
       });
-    },
-    // 查询
-    queryForm() {},
-    handleSelectionChange() {},
-    confirmQuestionSelect() {}
+    }
   }
 };
 </script>
