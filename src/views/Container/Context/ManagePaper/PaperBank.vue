@@ -1,125 +1,107 @@
 <template>
   <div id="paper-bank">
     <!-- 查询栏 -->
-    <div class="search">
-      <a-input-search placeholder="input search text" @search="onSearch" enterButton />
-      <a-button type="primary" @click="addQuestion()">新增</a-button>
-      <!-- 弹出的新增框 -->
-    </div>
-    <!-- 试卷表 -->
-    <a-table
-      :columns="columns"
-      :rowKey="record => record.login.uuid"
-      :dataSource="data"
-      :pagination="pagination"
-      :loading="loading"
-      @change="handleTableChange"
-    >
-      <template slot="name" slot-scope="name">{{ name.first }} {{ name.last }}</template>
-      <template slot="option" slot-scope="option">
-        <div class="icons-list">
-          <a-icon type="eye" theme="twoTone" />
-          <a-icon type="edit" theme="twoTone" />
-          <a-icon type="delete" theme="twoTone" />
-        </div>
-      </template>
-    </a-table>
+    <el-form :model="queryParam" ref="queryForm" :inline="true">
+      <el-form-item label="试卷ID：">
+        <el-input v-model="queryParam.id" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="学科：">
+        <el-select v-model="queryParam.subject_id" clearable>
+          <!-- <el-option
+            v-for="item in subjectFilter"
+            :key="item.id"
+            :value="item.id"
+            :label="item.name"
+          ></el-option> -->
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearch">查询</el-button>
+      </el-form-item>
+    </el-form>
+    <!-- 试卷信息表 -->
+    <el-table :data="data" border fit highlight-current-row style="width: 100%">
+      <el-table-column prop="id" label="Id" width="90px" />
+      <el-table-column prop="subject_id" label="学科" width="120px" />
+      <el-table-column prop="name" label="试卷名称" show-overflow-tooltip />
+      <el-table-column prop="create_time" label="创建时间" width="160px" />
+      <el-table-column label="操作" align="center" width="220px">
+        <template slot-scope="{ row }">
+          <el-button size="mini" @click="editPaper(row)">编辑</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="deletePaper(row)"
+            class="link-left"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 翻页 -->
+    <!-- <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParam.pageIndex"
+      :limit.sync="queryParam.pageSize"
+      @pagination="search"
+    /> -->
   </div>
 </template>
 
 <script>
-import reqwest from "reqwest";
-
 export default {
-  mounted() {
-    this.fetch(); //获取用户信息数据
+  created() {
+    //获取全部试卷
+    let d = [];
+    this.$api.PaperList().then(res => {
+      console.log("试卷列表：", res);
+      res.forEach((item, index) => {
+        d.push({
+          key: index,
+          id: item.id,
+          subject_id: item.subject_id,
+          name: item.name,
+          create_time: item.create_time
+        });
+      });
+      this.data = d;
+    });
   },
   data() {
     return {
-      data: [],
-      pagination: {},
-      loading: false,
-      columns: [
-        {
-          title: "试卷ID",
-          dataIndex: "id",
-          sorter: true,
-          width: "10%",
-          scopedSlots: { customRender: "id" }
-        },
-        {
-          title: "试卷名",
-          dataIndex: "paper_name",
-          width: "40%",
-          scopedSlots: { customRender: "paper_name" }
-        },
-        {
-          title: "试卷类型",
-          dataIndex: "paper_type",
-          width: "10%",
-          scopedSlots: { customRender: "paper_type" }
-        },
-        {
-          title: "试卷难度",
-          dataIndex: "paper_level",
-          filters: [
-            { text: "难", value: "3" },
-            { text: "中等", value: "2" },
-            { text: "易", value: "1" }
-          ],
-          width: "10%"
-        },
-        {
-          title: "操作",
-          dataIndex: "option",
-          scopedSlots: { customRender: "option" }
-        }
-      ],
-      visible: false,
-      confirmLoading: false
+      data: null,
+      queryParam: {
+        id: null,
+        subject_id: null
+      }
     };
   },
   methods: {
-    handleTableChange(pagination, filters, sorter) {
-      console.log(pagination);
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      this.fetch({
-        results: pagination.pageSize,
-        page: pagination.current,
-        sortField: sorter.field,
-        sortOrder: sorter.order,
-        ...filters
-      });
-    },
-    fetch(params = {}) {
-      console.log("params:", params);
-      this.loading = true;
-      reqwest({
-        url: "https://randomuser.me/api",
-        method: "get",
-        data: {
-          results: 10,
-          ...params
-        },
-        type: "json"
-      }).then(data => {
-        console.log(data);
-        const pagination = { ...this.pagination };
-        pagination.total = 200;
-        this.loading = false;
-        this.data = data.results;
-        this.pagination = pagination;
-      });
-    },
     //查询
     onSearch(value) {
       console.log(value);
     },
-    addQuestion() {
-      // 弹出新增框
-      this.visible = true;
+    editPaper(row) {
+      console.log("要编辑的单个试卷为：", row);
+      // 跳转到‘编辑’页面
+      this.$router.push({
+        path: "/layout/edit-paper",
+        query: { id: row.id }
+      });
+    },
+    deletePaper(row) {
+      let Id = row.id;
+      console.log("点击删除的item", row);
+      // this.$api.DelQue({ id: Id }).then(res => {
+      //   if (res.state === 200) {
+      //     this.data = this.data.filter(item => item.id !== Id); // 删除指定id题目
+      //     this.$message.success(res.msg);
+      //   } else {
+      //     this.$message.error(res.msg);
+      //   }
+      // });
     }
   }
 };
@@ -129,11 +111,6 @@ export default {
 .icons-list > .anticon {
   margin-right: 1rem;
   font-size: 1rem;
-}
-
-.search {
-  display: grid;
-  grid-template-columns: 95% 5%;
 }
 
 .search > .ant-input-search {

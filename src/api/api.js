@@ -4,6 +4,7 @@
 import { get, post } from "./http";
 import user from "./user";
 import question from "./question";
+import paper from "./paper";
 
 export default {
   // user_info表相关、登录注册相关操作
@@ -20,5 +21,12 @@ export default {
   AddQue: question.AddQue, //新增题目
   SelQue: question.SelQue, //预览题目
   EditQue: question.EditQue,
-  DelQue: question.DelQue
+  DelQue: question.DelQue,
+
+  // t_exam_paper表相关操作
+  PaperList: paper.PaperList, //获取所有试卷
+  AddPaper: paper.AddPaper, //新增试卷
+  SelPaper: paper.SelPaper, //预览试卷
+  EditPaper: paper.EditPaper,
+  DelPaper: paper.DelPaper
 };

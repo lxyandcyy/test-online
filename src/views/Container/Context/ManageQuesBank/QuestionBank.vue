@@ -32,7 +32,7 @@
         </el-popover>
       </el-form-item>
     </el-form>
-    <!-- 用户信息表 -->
+    <!-- 题目信息表 -->
     <el-table :data="data" border fit highlight-current-row style="width: 100%">
       <el-table-column prop="id" label="Id" width="90px" />
       <el-table-column prop="subject_id" label="学科" width="120px" />

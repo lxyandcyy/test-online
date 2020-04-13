@@ -1,5 +1,5 @@
 <template>
-  <div id="add-paper">
+  <div id="edit-paper">
     <!-- 表单 -->
     <el-form :model="form" ref="form" label-width="100px" :rules="rules">
       <el-form-item label="学科" prop="subject_id" required>
@@ -23,28 +23,22 @@
         >
           添加题目
         </el-button>
-        <!-- 所选题目的卡片列表 -->
         <el-card
           class="exampaper-item-box"
           v-if="form.questionItems.length !== 0"
         >
           <el-form-item
-            :key="index"
-            :label="'题目' + (index + 1) + '：'"
-            v-for="(item, index) in form.questionItems"
+            :key="questionIndex"
+            :label="'题目' + (questionIndex + 1) + '：'"
+            v-for="(questionItem, questionIndex) in form.questionItems"
             style="margin-bottom: 15px"
           >
             <el-row>
               <el-col :span="23">
-                <QuestionShow :question="item" />
+                <QuestionShow :question="questionItem" />
               </el-col>
               <el-col :span="1">
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="form.questionItems.splice(index, 1)"
-                  >删除</el-button
-                >
+                <el-button type="text" size="mini">删除 </el-button>
               </el-col>
             </el-row>
           </el-form-item>
@@ -116,6 +110,26 @@ export default {
   components: { QuestionShow },
   created() {
     //获取学科数据
+    // ......
+
+    let id = this.$route.query.id;
+    console.log("当前编辑的试卷id是：", id);
+
+    //获取试卷初始数据
+    this.$api
+      .SelPaper(id)
+      .then(res => {
+        console.log("当前编辑的试卷初始数据是：", res);
+        this.form = {
+          id: res.id,
+          subject_id: res.subject_id,
+          name: res.name,
+          countdown: res.countdown,
+          questionItems: res.questionItems
+        };
+        console.log(this.form);
+      })
+      .catch(err => console.log(err));
   },
   data() {
     return {
@@ -124,10 +138,10 @@ export default {
         subject_id: 1,
         name: "",
         countdown: null,
-        questionItems: [] //card中显示所选的题目列表数据
+        questionItems: []
       },
       questionPage: {
-        multipleSelection: [], //所选题目列表
+        multipleSelection: [],
         showDialog: false,
         queryParam: {
           id: null,
@@ -136,7 +150,7 @@ export default {
           pageSize: 5
         },
         listLoading: true,
-        tableData: [], //所有题目
+        tableData: null, //所有题目
         total: 0
       },
       rules: {
@@ -151,6 +165,37 @@ export default {
     };
   },
   methods: {
+    //提交新编辑好的题目数据
+    // submitForm() {
+    //   //题目最新编辑时间=当前提交时间
+    //   this.form.create_time = Date.now();
+
+    //   this.$refs.form.validate(valid => {
+    //     //如果表单填写完整
+    //     if (valid) {
+    //       this.$api
+    //         .EditQue(this.form)
+    //         .then(res => {
+    //           console.log(res);
+    //           this.$message.success("题目编辑成功！");
+    //           //   跳转到‘题库列表’页面
+    //           this.$router.push({ path: "/layout/question-bank" });
+    //         })
+    //         .catch(e => {
+    //           console.log(e);
+    //           this.$message.error({ content: "题目提交失败，请检查网络！" });
+    //         });
+    //     } else {
+    //       this.$message.info("请把表单填写完整！");
+    //       return false;
+    //     }
+    //   });
+    // },
+    // 重置
+    resetForm() {
+      this.$refs["form"].resetFields();
+    },
+
     addQuestion() {
       this.search();
       this.questionPage.showDialog = true;
@@ -162,27 +207,10 @@ export default {
       this.$api.QueList().then(res => {
         console.log("题库列表：", res);
         this.questionPage.tableData = res;
-        this.questionPage.total = res.length;
-        this.questionPage.queryParam.pageIndex = res.length;
+        // this.questionPage.total = res.length;
+        // this.questionPage.queryParam.pageIndex = res.length;
         this.questionPage.listLoading = false;
       });
-    },
-    // 重置
-    resetForm() {
-      this.$refs["form"].resetFields();
-    },
-    // 查询
-    queryForm() {},
-    //题目选择复选框改变时
-    handleSelectionChange(val) {
-      this.questionPage.multipleSelection = val;
-      console.log(val);
-    },
-    confirmQuestionSelect() {
-      this.questionPage.multipleSelection.forEach(q => {
-        this.form.questionItems.push(q);
-      });
-      this.questionPage.showDialog = false;
     },
     submitForm() {
       //题目创建时间=当前提交时间
@@ -192,30 +220,29 @@ export default {
         //如果表单填写完整
         if (valid) {
           this.$api
-            .AddPaper(this.form)
+            .AddQue(this.form)
             .then(res => {
               console.log(res);
-              this.$message.success("试卷新增成功！");
-              //   跳转到‘试卷列表’页面
-              this.$router.push({ path: "/layout/paper-bank" });
+              this.$message.success("题目新增成功！");
+              //   跳转到‘题库列表’页面
+              this.$router.push({ path: "/layout/question-bank" });
             })
             .catch(e => {
               console.log(e);
-              this.$message.error({ content: "新增试卷失败，请检查网络！" });
+              this.$message.error({ content: "题目提交失败，请检查网络！" });
             });
         } else {
           this.$message.info("请把表单填写完整！");
           return false;
         }
       });
-    }
+    },
+    // 查询
+    queryForm() {},
+    handleSelectionChange() {},
+    confirmQuestionSelect() {}
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.exampaper-item-box {
-  .q-item-content {
-  }
-}
-</style>
+<style scoped></style>
