@@ -40,45 +40,75 @@
     </el-table>
 
     <!-- 翻页 -->
-    <!-- <pagination
+    <pagination
       v-show="total > 0"
       :total="total"
       :page.sync="queryParam.pageIndex"
       :limit.sync="queryParam.pageSize"
-      @pagination="search"
-    /> -->
+      @pagination="changePage"
+    />
   </div>
 </template>
 
 <script>
+import Pagination from "@/components/Pagination";
+
 export default {
+  components: { Pagination },
   created() {
+    // 获取学科数据
+    // 。。。
+
     //获取全部试卷
-    let d = [];
-    this.$api.PaperList().then(res => {
-      console.log("试卷列表：", res);
-      res.forEach((item, index) => {
-        d.push({
-          key: index,
-          id: item.id,
-          subject_id: item.subject_id,
-          name: item.name,
-          create_time: item.create_time
-        });
-      });
-      this.data = d;
-    });
+    this.searchList();
   },
   data() {
     return {
-      data: null,
+      all_data: [], //所有试卷列表数据
+      total: 0,
       queryParam: {
+        //查询栏
         id: null,
-        subject_id: null
+        subject_id: null,
+        pageIndex: 1,
+        pageSize: 10
       }
     };
   },
+  computed: {
+    //单页试卷列表数据
+    data() {
+      let page_start_index =
+        this.queryParam.pageSize * (this.queryParam.pageIndex - 1);
+      let d = this.all_data.slice(
+        page_start_index,
+        page_start_index + this.queryParam.pageSize + 1
+      );
+      return d;
+    }
+  },
   methods: {
+    searchList() {
+      let d = [];
+      this.$api.PaperList().then(res => {
+        console.log("试卷列表：", res);
+        res.forEach((item, index) => {
+          d.push({
+            key: index,
+            id: item.id,
+            subject_id: item.subject_id,
+            name: item.name,
+            create_time: item.create_time
+          });
+        });
+        this.all_data = d;
+        this.total = this.all_data.length;
+      });
+    },
+    changePage(pageObj) {
+      this.queryParam.pageIndex = pageObj.page;
+      this.queryParam.pageSize = pageObj.limit;
+    },
     //查询
     onSearch(value) {
       console.log(value);

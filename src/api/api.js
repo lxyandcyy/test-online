@@ -7,6 +7,10 @@ import question from "./question";
 import paper from "./paper";
 
 export default {
+  verifyToken: token => {
+    return get("http://localhost:6001/verify-token", token);
+  }, //验证log_token
+
   // user_info表相关、登录注册相关操作
   getToken: user.getToken, //获取access_Token
   postRegInfo: user.postRegInfo, // 用户注册信息
@@ -15,6 +19,8 @@ export default {
   Login: user.Login, //人脸登录
   ChangeFace: user.ChangeFace, //人脸修改
   AllUserInfo: user.AllUserInfo, //所有用户列表
+  SelUser: user.SelUser, //单个用户信息
+  UpdateUser: user.UpdateUser, //修改当前用户信息
 
   // t_quetion表相关操作
   QueList: question.QueList, //获取所有题目

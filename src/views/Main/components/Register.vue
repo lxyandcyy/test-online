@@ -36,14 +36,17 @@
       <div>
         <strong>绑定人脸</strong>
       </div>
-      <FaceDetect @changeIsInfo="ChangeIsInfo()" :father="father"></FaceDetect>
+      <FaceDetect
+        @changeIsInfo="ChangeIsInfo()"
+        :father="father"
+        ref="faceDetect"
+      ></FaceDetect>
     </div>
   </div>
 </template>
 
 <script>
 import FaceDetect from "./FaceDetect";
-// import { onChange } from "../../../utils/Main页面/ass.js";
 
 export default {
   data() {
@@ -82,7 +85,8 @@ export default {
         switch (res.state) {
           case 200:
             this.isInfo = false; //跳转到‘人脸绑定’页
-            this.$message.success(`${res.msg}`); //用户注册成功！
+            this.$refs.faceDetect.openVideo(); //打开人脸绑定页的摄像头
+            // this.$message.success(`${res.msg}`); //用户注册成功！
             break;
           case 400:
             this.$message.error(`${res.msg}`); //用户注册失败！

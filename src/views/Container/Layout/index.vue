@@ -49,6 +49,10 @@
       <!-- 右边内容区 -->
       <a-layout>
         <a-layout-header style="background: #fff; padding: 0" />
+
+        <!-- navbar -->
+        <NavBar></NavBar>
+
         <a-layout-content style="margin: 0 16px">
           <a-breadcrumb style="margin: 2vh 0">
             <a-breadcrumb-item>User</a-breadcrumb-item>
@@ -58,14 +62,21 @@
             <router-view></router-view>
           </div>
         </a-layout-content>
-        <a-layout-footer style="text-align: center">在线测试系统 ©2020 Created by lxy</a-layout-footer>
+        <a-layout-footer style="text-align: center"
+          >在线测试系统 ©2020 Created by lxy</a-layout-footer
+        >
       </a-layout>
     </a-layout>
   </div>
 </template>
 
 <script>
+import NavBar from "@/views/Container/Layout/Navbar";
+
 export default {
+  components: {
+    NavBar
+  },
   data() {
     return {
       module_name: [
@@ -120,14 +131,5 @@ export default {
 <style lang="scss" scoped>
 #components-layout-demo-side {
   font-family: Georgia;
-
-  .logo {
-    color: white;
-    font-style: oblique;
-    text-align: center;
-    line-height: 32px;
-    height: 32px;
-    margin: 16px;
-  }
 }
 </style>

@@ -20,12 +20,9 @@ export default {
     return {
       n: 0,
       detectTips: "",
-      user_id: this.$store.state.user.user_id,
-      access_token: this.$store.state.access_token
+      user_id: "",
+      access_token: ""
     };
-  },
-  created() {
-    this.openVideo();
   },
   methods: {
     //打开摄像头
@@ -54,7 +51,7 @@ export default {
       setTimeout(() => {
         this.detectTips = msg;
         this.faceDetect();
-      }, 1000);
+      }, 2000);
     },
     faceDetect() {
       console.log(this.father, this.n);
@@ -77,11 +74,12 @@ export default {
       }
     },
     RegFace(base64_img) {
+      console.log(this.user_info);
       this.$api
         .postRegFace({
-          user_id: this.user_id,
-          group_id: "admin",
-          access_token: this.access_token,
+          user_id: this.$store.state.user.user_id,
+          group_id: this.$store.state.user.user_type,
+          access_token: this.$store.state.access_token,
           image_type: "BASE64",
           image: base64_img
         })
@@ -103,7 +101,8 @@ export default {
               this.dengdai("没有检测到人脸，正在重新检测。。");
               break;
             default:
-              this.detectTips = "what?";
+              // this.detectTips = "what?";
+              this.dengdai("没有检测到人脸，正在重新检测。。");
               break;
           }
         })
@@ -115,30 +114,42 @@ export default {
     Login(base64_img) {
       this.$api
         .Login({
-          group_id_list: "admin",
-          access_token: this.access_token,
+          user_id: this.$store.state.user.user_id,
+          group_id_list: this.$store.state.user.user_type,
+          access_token: this.$store.state.access_token,
           image_type: "BASE64",
           image: base64_img
         })
         .then(res => {
+          console.log("登录接口返回的响应", res);
           switch (res.error_code) {
             case 0:
               const score = res.result.user_list[0].score; //匹配分数
               if (score >= 90) {
                 this.detectTips = "登录成功";
-                // 跳转到内容主界面
-                router.push({
-                  path: "/layout/manage-user"
+                this.$message.success("登录成功", 3000);
+                console.log("登录接口返回结果：", res);
+
+                this.$store.commit("updateUser", {
+                  user_id: res.result.user_list[0].user_id
+                }); //user_id 存进vuex
+                this.saveTolocalStorage({
+                  log_token: res["log_token"]
                 });
-              } else if (score >= 60 && score < 90) {
+
+                // 跳转到home界面
+                setTimeout(() => {
+                  this.$router.push({
+                    path: "/layout"
+                  });
+                }, 1000);
+              } else {
                 this.detectTips = "没有匹配到相应用户，请先注册";
                 // 跳转到上一级页面(Main)。。。。
-                this.$message.loading("3秒后返回上一级进行注册..", 3000);
+                this.$message.error("3秒后返回上一级进行注册..", 3000);
                 setTimeout(() => {
                   location.reload(); //刷新页面，相当于跳转到Main页面
                 }, 3000);
-              } else {
-                this.dengdai("没有检测到人脸，正在重新检测。。");
               }
               break;
             case 222202:
@@ -178,9 +189,15 @@ export default {
     },
     goBack() {
       location.reload(); //刷新页面，相当于跳转到Main页面
+    },
+    saveTolocalStorage(obj) {
+      for (let key of Object.keys(obj)) {
+        localStorage.setItem(key, obj[key]);
+      }
+      return obj;
     }
   },
-  props: ["father"]
+  props: ["father", "isInfo"]
 };
 </script>
 

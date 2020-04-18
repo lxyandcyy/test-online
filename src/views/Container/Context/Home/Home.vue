@@ -8,6 +8,8 @@ export default {
     return {
       name: "lxy"
     };
-  }
+  },
+  created() {},
+  methods: {}
 };
 </script>

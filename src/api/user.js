@@ -57,5 +57,11 @@ export default {
   ChangeFace: p => post("http://localhost:6001/user/changeFace", p),
 
   // 所有用户列表
-  AllUserInfo: () => get("http://localhost:6001/user/allUserInfo")
+  AllUserInfo: () => get("http://localhost:6001/user/allUserInfo"),
+
+  // 单个用户信息
+  SelUser: g => get("http://localhost:6001/user/sel-user", g),
+
+  // 修改当前用户密码
+  UpdateUser: p => post("http://localhost:6001/user/update-user", p)
 };

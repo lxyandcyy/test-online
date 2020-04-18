@@ -6,95 +6,104 @@
       @search="onSearch"
       enterButton
     />
+
     <!-- 用户信息表 -->
-    <a-table
-      :columns="columns"
-      :dataSource="data"
-      :pagination="{ pageSize: 10 }"
-      :scroll="{ y: 550 }"
-    >
-      <template slot="name" slot-scope="name">{{ name }}</template>
-      <template slot="option" slot-scope="option">
-        <div class="icons-list">
-          <a-icon type="eye" theme="twoTone" />
-          <a-icon type="edit" theme="twoTone" />
-          <a-icon type="delete" theme="twoTone" />
-        </div>
-      </template>
-    </a-table>
+    <el-table :data="data" border fit highlight-current-row style="width: 100%">
+      <el-table-column prop="id" label="Id" width="150px" />
+      <el-table-column prop="name" label="用户名" width="150px" />
+      <el-table-column prop="user_type" label="用户类型" width="90px" />
+      <el-table-column prop="reg_time" label="注册时间" />
+      <el-table-column prop="password" label="密码" width="160px" />
+      <el-table-column label="操作" align="center" width="300px">
+        <template slot-scope="{ row }">
+          <el-button size="mini" @click="showGrade(row)"
+            >查看用户成绩</el-button
+          >
+          <el-button
+            size="mini"
+            type="danger"
+            @click="deleteQuestion(row)"
+            class="link-left"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 翻页 -->
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParam.pageIndex"
+      :limit.sync="queryParam.pageSize"
+      @pagination="changePage"
+    />
   </div>
 </template>
 
 <script>
-import reqwest from "reqwest";
-
-let data = [];
+import Pagination from "@/components/Pagination";
 
 export default {
-  beforeCreate() {
-    data = [];
-    this.$api.AllUserInfo().then(res => {
-      res.forEach((item, index) => {
-        if (item.user_type == "user") {
-          //过滤出用户类型为学生的用户数据，添加到data中
-          data.push({
-            key: index,
-            id: item.user_id,
-            name: item.user_id,
-            user_type: item.user_type,
-            reg_time: item.reg_time,
-            password: item.password
-          });
-        }
-      });
-    });
+  components: { Pagination },
+  created() {
+    this.searchList();
   },
   data() {
     return {
-      data, //所有用户字段
-      columns: [
-        {
-          title: "用户ID",
-          dataIndex: "id",
-          width: "10%",
-          scopedSlots: { customRender: "id" }
-        },
-        {
-          title: "用户名",
-          dataIndex: "name",
-          width: "10%",
-          scopedSlots: { customRender: "name" }
-        },
-        {
-          title: "用户类型",
-          dataIndex: "user_type",
-          width: "10%",
-          scopedSlots: { customRender: "user_type" }
-        },
-        {
-          title: "注册时间",
-          dataIndex: "reg_time",
-          sorter: true
-        },
-        {
-          title: "密码",
-          dataIndex: "password",
-          width: "10%"
-        },
-        {
-          title: "操作",
-          dataIndex: "option",
-          scopedSlots: { customRender: "option" },
-          width: "10%"
-        }
-      ]
+      all_data: [], //所有用户字段
+      total: 0,
+      queryParam: {
+        //查询栏
+        id: null,
+        name: null,
+        pageIndex: 1,
+        pageSize: 10
+      }
     };
   },
+  computed: {
+    //单页用户列表数据
+    data() {
+      let page_start_index =
+        this.queryParam.pageSize * (this.queryParam.pageIndex - 1);
+      let d = this.all_data.slice(
+        page_start_index,
+        page_start_index + this.queryParam.pageSize + 1
+      );
+      return d;
+    }
+  },
   methods: {
+    searchList() {
+      let d = [];
+      this.$api.AllUserInfo().then(res => {
+        res.forEach((item, index) => {
+          if (item.user_type == "user") {
+            //过滤出用户类型为学生的用户数据，添加到data中
+            d.push({
+              key: index,
+              id: item.user_id,
+              name: item.user_id,
+              user_type: item.user_type,
+              reg_time: item.reg_time,
+              password: item.password
+            });
+          }
+        });
+        this.all_data = d;
+        this.total = this.all_data.length;
+      });
+    },
+    changePage(pageObj) {
+      this.queryParam.pageIndex = pageObj.page;
+      this.queryParam.pageSize = pageObj.limit;
+    },
     //查询
     onSearch(value) {
       console.log(value);
-    }
+    },
+    showGrade(row) {}
   }
 };
 </script>

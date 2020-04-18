@@ -23,13 +23,12 @@ export default new Vuex.Store({
       state.access_token = value;
     },
     updateUser(state, obj) {
-      [state.user.user_id, state.user.password, state.user.user_type] = [
-        obj.user_id,
-        obj.password,
-        obj.user_type,
-        obj.reg_address,
-        obj.reg_time
-      ];
+      [
+        state.user.user_id,
+        state.user.password,
+        state.user.user_type,
+        state.user.reg_time
+      ] = [obj.user_id, obj.password, obj.user_type, obj.reg_time];
     }
   },
   actions: {},
