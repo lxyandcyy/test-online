@@ -3,18 +3,18 @@ export default [
   {
     path: "paper-bank",
     name: "PaperBank",
-    component: () => import("@/views/Container/Context/ManagePaper/PaperBank")
+    component: () => import("@/views/Admin/Context/ManagePaper/PaperBank"),
   },
   // 试卷管理-->新增试卷
   {
     path: "add-paper",
     name: "AddPaper",
-    component: () => import("@/views/Container/Context/ManagePaper/AddPaper")
+    component: () => import("@/views/Admin/Context/ManagePaper/AddPaper"),
   },
   // 试卷管理-->编辑试卷
   {
     path: "edit-paper",
     name: "EditPaper",
-    component: () => import("@/views/Container/Context/ManagePaper/EditPaper")
-  }
+    component: () => import("@/views/Admin/Context/ManagePaper/EditPaper"),
+  },
 ];

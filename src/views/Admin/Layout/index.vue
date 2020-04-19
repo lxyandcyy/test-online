@@ -62,16 +62,14 @@
             <router-view></router-view>
           </div>
         </a-layout-content>
-        <a-layout-footer style="text-align: center"
-          >在线测试系统 ©2020 Created by lxy</a-layout-footer
-        >
+        <a-layout-footer style="text-align: center">在线测试系统 ©2020 Created by lxy</a-layout-footer>
       </a-layout>
     </a-layout>
   </div>
 </template>
 
 <script>
-import NavBar from "@/views/Container/Layout/Navbar";
+import NavBar from "@/views/Admin/Layout/Navbar";
 
 export default {
   components: {

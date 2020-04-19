@@ -4,13 +4,7 @@
     <div>
       <span id="ts" ref="ts">{{ detectTips }}</span>
     </div>
-    <canvas
-      id="canvas"
-      ref="canvas"
-      width="200"
-      height="200"
-      v-show="false"
-    ></canvas>
+    <canvas id="canvas" ref="canvas" width="200" height="200" v-show="false"></canvas>
   </div>
 </template>
 
@@ -128,8 +122,6 @@ export default {
               if (score >= 90) {
                 this.detectTips = "登录成功";
                 this.$message.success("登录成功", 3000);
-                console.log("登录接口返回结果：", res);
-
                 this.$store.commit("updateUser", {
                   user_id: res.result.user_list[0].user_id
                 }); //user_id 存进vuex
@@ -137,12 +129,23 @@ export default {
                   log_token: res["log_token"]
                 });
 
-                // 跳转到home界面
-                setTimeout(() => {
-                  this.$router.push({
-                    path: "/layout"
-                  });
-                }, 1000);
+                // 判断用户类型，若为admin跳转到/layout（考生页面）,若为user跳转到/Layout（管理员页面）
+                switch (res.result.user_list[0].group_id) {
+                  case "user":
+                    console.log("user");
+                    this.$router.push({
+                      path: "/student-layout/home"
+                    });
+                    break;
+                  case "admin":
+                    // 跳转到home界面
+                    setTimeout(() => {
+                      this.$router.push({
+                        path: "/layout"
+                      });
+                    }, 1000);
+                    break;
+                }
               } else {
                 this.detectTips = "没有匹配到相应用户，请先注册";
                 // 跳转到上一级页面(Main)。。。。

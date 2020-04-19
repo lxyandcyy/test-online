@@ -3,19 +3,18 @@ export default [
   {
     path: "all-grade",
     name: "AllGrade",
-    component: () => import("@/views/Container/Context/ManageGrade/AllGrade")
+    component: () => import("@/views/Admin/Context/ManageGrade/AllGrade"),
   },
   // 考试结果分析(成绩管理)-->个人成绩分析
   {
     path: "personal-grade",
     name: "PersonalGrade",
-    component: () =>
-      import("@/views/Container/Context/ManageGrade/PersonalGrade")
+    component: () => import("@/views/Admin/Context/ManageGrade/PersonalGrade"),
   },
   // 考试结果分析(成绩管理)-->试卷成绩分析
   {
     path: "paper-grade",
     name: "PaperGrade",
-    component: () => import("@/views/Container/Context/ManageGrade/PaperGrade")
-  }
+    component: () => import("@/views/Admin/Context/ManageGrade/PaperGrade"),
+  },
 ];
