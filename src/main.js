@@ -9,7 +9,10 @@ import "element-ui/lib/theme-chalk/index.css";
 import VueParticles from "vue-particles"; //引入粒子效果
 import axios from "axios";
 import api from "./api/api"; // 导入api接口
-import vuetify from './plugins/vuetify';
+import vuetify from "./plugins/vuetify";
+import "vuetify/dist/vuetify.min.css";
+import "@mdi/font/css/materialdesignicons.css";
+import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 //全局注册
 Vue.use(Antd);
@@ -24,5 +27,5 @@ new Vue({
   router,
   store,
   vuetify,
-  render: (h) => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

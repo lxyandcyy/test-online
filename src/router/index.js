@@ -73,34 +73,47 @@ const router = new VueRouter({
       component: StudentLayout,
       redirect: "/student-layout/home",
       children: [
+        //考试中心
+        {
+          path: "exam-list",
+          name: "ExamList",
+          component: () => import("@/views/Student/Exam/ExamList"),
+        },
+
         //考生主页
         {
           path: "home",
           name: "Home",
           component: () => import("@/views/Student/Home/Home"),
         },
-        // {
-        //   // 考生个人信息
-        //   path: "profile",
-        //   name: "Profile",
-        //   component: () => import("@/views/Admin/Context/Profile/Profile"),
-        // },
-        // //用户管理-->学生列表
-        // {
-        //   path: "student",
-        //   name: "Student",
-        //   component: () => import("@/views/Admin/Context/ManageUser/Student"),
-        // },
-        // //用户管理-->管理员列表
-        // {
-        //   path: "admin",
-        //   name: "Admin",
-        //   component: () => import("@/views/Admin/Context/ManageUser/Admin"),
-        // },
+        //错题列表页
+        {
+          path: "mistake-list",
+          name: "MistakeList",
+          component: () => import("@/views/Student/Mistake/MistakeList"),
+        },
+        //智能训练页
+        {
+          path: "practice-list",
+          name: "PracticeList",
+          component: () => import("@/views/Student/Practice/PracticeList"),
+        },
+        //个人中心
+        {
+          path: "profile",
+          name: "Profile",
+          component: () => import("@/views/Student/Profile/Profile"),
+        },
         // ...question,
         // ...paper,
         // ...result,
       ],
+    },
+    //答题页面
+    {
+      path: "/do-exam",
+      name: "DoExam",
+      component: () => import("@/views/Student/Exam/DoExam"),
     },
   ],
 });

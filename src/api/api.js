@@ -5,9 +5,10 @@ import { get, post } from "./http";
 import user from "./user";
 import question from "./question";
 import paper from "./paper";
+import practice_paper from "./practice_paper";
 
 export default {
-  verifyToken: token => {
+  verifyToken: (token) => {
     return get("http://localhost:6001/verify-token", token);
   }, //验证log_token
 
@@ -34,5 +35,7 @@ export default {
   AddPaper: paper.AddPaper, //新增试卷
   SelPaper: paper.SelPaper, //预览试卷
   EditPaper: paper.EditPaper,
-  DelPaper: paper.DelPaper
+  DelPaper: paper.DelPaper,
+
+  PracticePaperList: practice_paper.PracticePaperList,
 };

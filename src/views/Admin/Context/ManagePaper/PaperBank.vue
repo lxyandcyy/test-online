@@ -71,8 +71,8 @@ export default {
         id: null,
         subject_id: null,
         pageIndex: 1,
-        pageSize: 10
-      }
+        pageSize: 10,
+      },
     };
   },
   computed: {
@@ -85,25 +85,24 @@ export default {
         page_start_index + this.queryParam.pageSize + 1
       );
       return d;
-    }
+    },
   },
   methods: {
-    searchList() {
+    async searchList() {
       let d = [];
-      this.$api.PaperList().then(res => {
-        console.log("试卷列表：", res);
-        res.forEach((item, index) => {
-          d.push({
-            key: index,
-            id: item.id,
-            subject_id: item.subject_id,
-            name: item.name,
-            create_time: item.create_time
-          });
+      let res = await this.$api.PaperList();
+      console.log("试卷列表：", res);
+      res.forEach((item, index) => {
+        d.push({
+          key: index,
+          id: item.id,
+          subject_id: item.subject_id,
+          name: item.name,
+          create_time: item.create_time,
         });
-        this.all_data = d;
-        this.total = this.all_data.length;
       });
+      this.all_data = d;
+      this.total = this.all_data.length;
     },
     changePage(pageObj) {
       this.queryParam.pageIndex = pageObj.page;
@@ -118,22 +117,22 @@ export default {
       // 跳转到‘编辑’页面
       this.$router.push({
         path: "/layout/edit-paper",
-        query: { id: row.id }
+        query: { id: row.id },
       });
     },
     deletePaper(row) {
       let Id = row.id;
       console.log("点击删除的item", row);
-      this.$api.DelPaper({ id: Id }).then(res => {
+      this.$api.DelPaper({ id: Id }).then((res) => {
         if (res.state === 200) {
-          this.data = this.data.filter(item => item.id !== Id); // 删除指定id题目
+          this.data = this.data.filter((item) => item.id !== Id); // 删除指定id题目
           this.$message.success(res.msg);
         } else {
           this.$message.error(res.msg);
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
