@@ -6,11 +6,11 @@
         <!-- 题目学科 -->
         <v-col cols="12" sm="12">
           <v-select
-            v-model="filterQuestion.subject_id"
-            :items="items"
+            v-model="filterQuestion.select_subjects"
+            :items="filterQuestion.subjects_name"
             attach
             chips
-            label="学科："
+            label="科目："
             multiple
           ></v-select>
         </v-col>
@@ -21,6 +21,7 @@
           :max="6"
           class="mx-4"
           ticks
+          :tick-labels="filterQuestion.tickArray"
           label="题目数量："
         ></v-slider>
         <!-- 题目难度 -->
@@ -33,11 +34,12 @@
           dense
         ></v-rating>
 
-        <v-btn rounded color="warning" class="mt-5" @click="generatePaper"
+        <v-btn rounded color="warning" class="mt-5" @click="addPracticePaper"
           >生成试卷</v-btn
         >
       </v-card>
 
+      <!-- 智能试卷列表 -->
       <v-card-title>
         智能训练试卷
         <v-spacer></v-spacer>
@@ -58,7 +60,7 @@
         <template v-slot:item.action="slotScope">
           <router-link
             :to="{
-              path: '/do-exam',
+              path: '/do-practice',
               query: { id: slotScope.item.id },
             }"
           >
@@ -76,16 +78,22 @@ export default {
     return {
       filterQuestion: {
         //通过以下三种条件筛选题目，从而生成试卷
-        subject_id: [],
+        practice_paper_id: null,
+        practice_paper_name: null,
+        subjects_id: [],
+        select_subjects: [],
+        subjects_name: [],
         question_count: 0,
         difficult: 0,
+        tickArray: [0, 1, 2, 3, 4, 5, 6],
       },
+      //试卷列表
       table: {
         search: "",
         headers: [
-          { text: "名称", align: "start", value: "name" },
-          { text: "学科", value: "subject_id" },
-
+          { text: "智能试卷ID", align: "start", value: "practice_paper_id" },
+          { text: "名称", align: "start", value: "practice_paper_name" },
+          { text: "科目", value: "subjects_name" },
           { text: "创建时间(Date)", value: "create_time" },
           { text: "操作", value: "action" },
         ],
@@ -94,26 +102,40 @@ export default {
     };
   },
   created() {
-    this.searchList();
+    this.searchList(); //获取所有智能试卷
   },
   methods: {
-    searchList() {
+    async searchList() {
       let d = [];
-      this.$api.PracticeList().then((res) => {
-        console.log("智能训练卷列表：", res);
-        res.forEach((item, index) => {
-          d.push({
-            key: index,
-            id: item.id,
-            subject_id: item.subject_id,
-            name: item.name,
-            countdown: item.countdown,
-            start_time: item.start_time,
-            end_time: item.end_time,
-          });
+      let res = await this.$api.PracticePaperList();
+      console.log("试卷列表：", res);
+      res.forEach((item, index) => {
+        d.push({
+          practice_paper_id: item.practice_paper_id,
+          practice_paper_name:
+            `${item.practice_paper_name}` + `${item.practice_paper_id}`,
+          subjects_name: item.subjects_id,
+          create_time: item.create_time,
         });
-        this.desserts = d;
       });
+      this.table.desserts = d;
+
+      // 获取学科数据....待做
+      this.filterQuestion.subjects_name = ["数据结构", "高数", "计算机网络"];
+    },
+    async generatePracticePaper(conditions) {
+      let res = await this.$api.AddPracticePaper(conditions);
+      console.log("生成试卷", res);
+    },
+    async addPracticePaper() {
+      this.filterQuestion.subjects_id = [];
+      this.filterQuestion.select_subjects.forEach((item) => {
+        this.filterQuestion.subjects_id.push(
+          this.filterQuestion.subjects_name.indexOf(item)
+        );
+      });
+      await this.generatePracticePaper(this.filterQuestion);
+      this.searchList();
     },
   },
 };

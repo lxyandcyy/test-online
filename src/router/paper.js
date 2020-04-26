@@ -17,4 +17,11 @@ export default [
     name: "EditPaper",
     component: () => import("@/views/Admin/Context/ManagePaper/EditPaper"),
   },
+  //智能试卷列表
+  {
+    path: "practice-paper-bank",
+    name: "PracticePaperBank",
+    component: () =>
+      import("@/views/Admin/Context/ManagePaper/PracticePaperBank"),
+  },
 ];

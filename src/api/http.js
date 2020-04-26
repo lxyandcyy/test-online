@@ -17,12 +17,12 @@ export function get(url, params) {
   return new Promise((resolve, reject) => {
     axios
       .get(url, {
-        params: params
+        params: params,
       })
-      .then(res => {
+      .then((res) => {
         resolve(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         reject(err.data);
       });
   });
@@ -38,10 +38,29 @@ export function post(url, body) {
   return new Promise((resolve, reject) => {
     axios
       .post(url, body)
-      .then(res => {
+      .then((res) => {
         resolve(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
+        reject(err.data);
+      });
+  });
+}
+
+/**
+ * 封装post方法
+ * post方法，对应post请求
+ * @param {String} url [请求的url地址]
+ * @param {Object} params [请求时携带的参数]
+ */
+export function deleted(url, body) {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(url, body)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
         reject(err.data);
       });
   });

@@ -1,15 +1,5 @@
 <template>
-  <div id="do-exam">
-    <v-app-bar
-      app
-      color="white"
-      scroll-target="#scrolling-techniques-7"
-      class="countdowns"
-    >
-      <!-- 头部 -->
-      <span>剩余时间：{{ remainTime }}</span>
-    </v-app-bar>
-
+  <div id="do-practice">
     <!-- 中部 -->
     <v-sheet id="scrolling-techniques-7" class="overflow-y-auto">
       <v-content>
@@ -18,13 +8,7 @@
             <h1>{{ paper.name }}</h1>
             <div>
               <span class="question-title-padding"
-                >试卷总分：{{ paper.paper_score }}
-              </span>
-              <span class="question-title-padding"
-                >考试时间：{{ paper.countdown }}分钟
-              </span>
-              <span class="question-title-padding"
-                >当前考生：{{ user.user_id }}</span
+                >题目数量：{{ paper.paper_score }}</span
               >
             </div>
           </header>
@@ -139,7 +123,6 @@
 
 <script>
 import SnackBar from "@/components/SnackBar";
-import { mapState } from "vuex";
 
 export default {
   data() {
@@ -159,8 +142,6 @@ export default {
       current_question: 0,
       current_option: -1, //当前选项
       sheet: false,
-      remainTime: 0,
-      timer: null,
       formQueItems: [], //题目列表
       paper: {
         //试卷列表
@@ -179,12 +160,14 @@ export default {
         end_time: "",
         start_time: "",
       },
+      remainTime: 0,
+      timer: null,
     };
   },
   created() {
     this.$api.SelPaper(this.$route.query.id).then((res) => {
       this.paper = res.pap;
-      this.remainTime = this.paper.countdown * 60; //倒计时起始值
+      this.remainTime = this.paper.countdown; //倒计时起始值
       this.timeReduce(); //倒计时
       this.formQueItems = res.questionItems;
       this.formQueItems.forEach((item) => {
@@ -194,7 +177,6 @@ export default {
     });
   },
   computed: {
-    ...mapState(["user"]),
     formQueItem() {
       console.log(this.formQueItems[this.current_question]);
       return this.formQueItems[this.current_question] || {};
@@ -254,16 +236,10 @@ export default {
         this.submitExam();
       }
     },
-    async submitExam() {
+    submitExam() {
       this.dialog_tips.dialog = false;
-      this.user.do_time = this.paper.countdown - this.remainTime; //计算做题耗时s
-      let res = await this.$api.SubmitExam({
-        formQueItems: this.formQueItems,
-        paper: this.paper,
-        user: this.user,
-      });
 
-      console.log("res:", res);
+      // this.$api.
     },
     // 倒计时
     timeReduce() {

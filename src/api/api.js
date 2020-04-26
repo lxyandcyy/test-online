@@ -36,6 +36,11 @@ export default {
   SelPaper: paper.SelPaper, //预览试卷
   EditPaper: paper.EditPaper,
   DelPaper: paper.DelPaper,
+  SubmitExam: paper.SubmitExam,
 
   PracticePaperList: practice_paper.PracticePaperList,
+  AddPracticePaper: practice_paper.AddPracticePaper,
+  SelPracticePaper: practice_paper.SelPracticePaper,
+  EditPracticePaper: practice_paper.EditPracticePaper,
+  DelPracticePaper: practice_paper.DelPracticePaper,
 };

@@ -115,6 +115,12 @@ const router = new VueRouter({
       name: "DoExam",
       component: () => import("@/views/Student/Exam/DoExam"),
     },
+    //智能训练答题页面
+    {
+      path: "/do-practice",
+      name: "DoPractice",
+      component: () => import("@/views/Student/Practice/DoPractice"),
+    },
   ],
 });
 
