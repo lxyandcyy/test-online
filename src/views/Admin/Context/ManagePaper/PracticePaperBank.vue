@@ -6,7 +6,7 @@
       <v-text-field
         v-model="table.search"
         append-icon="mdi-magnify"
-        label="查询"
+        label="输入相关内容查询"
         single-line
         hide-details
       ></v-text-field>

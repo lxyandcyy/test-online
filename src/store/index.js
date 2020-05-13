@@ -14,7 +14,7 @@ export default new Vuex.Store({
     user: {
       user_id: "",
       password: "",
-      user_type: "user",
+      user_type: "USER",
       reg_time: ""
     }
   },
@@ -31,6 +31,4 @@ export default new Vuex.Store({
       ] = [obj.user_id, obj.password, obj.user_type, obj.reg_time];
     }
   },
-  actions: {},
-  modules: {}
 });

@@ -1,20 +1,14 @@
 <template>
   <div id="profile">
     <div>
-      <el-row :gutter="20">
-        <el-col :span="6" :xs="24">
+      <v-row>
+        <v-col>
           <UserCard :userInfo="userInfo"></UserCard>
-        </el-col>
-        <el-col :span="18" :xs="24">
-          <el-card>
-            <el-tabs active-name="account">
-              <el-tab-pane label="账户" name="account">
-                <Account :userInfo="userInfo"></Account>
-              </el-tab-pane>
-            </el-tabs>
-          </el-card>
-        </el-col>
-      </el-row>
+        </v-col>
+        <v-col>
+          <Account :userInfo="userInfo"></Account>
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
@@ -32,14 +26,12 @@ export default {
         user_id: "",
         reg_time: "",
         user_type: "1",
-        imagePath: null,
         password: ""
       }
     };
   },
   created() {
     this.userInfo = this.$store.state.user;
-    this.userInfo.imagePath = null;
   }
 };
 </script>

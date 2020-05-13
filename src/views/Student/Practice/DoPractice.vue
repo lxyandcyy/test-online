@@ -166,6 +166,7 @@ export default {
   },
   created() {
     this.$api.SelPaper(this.$route.query.id).then((res) => {
+      console.log(res)
       this.paper = res.pap;
       this.remainTime = this.paper.countdown; //倒计时起始值
       this.timeReduce(); //倒计时

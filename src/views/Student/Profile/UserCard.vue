@@ -20,10 +20,10 @@
         </div>
         <div class="box-center">
           <div class="user-name text-center">
-            {{ userInfo.user_id }}
+              {{ userInfo.userId }}
           </div>
           <div class="user-role text-center text-muted">
-            {{ userInfo.user_type === "admin" ? "管理员" : "考生" }}
+            {{ userInfo.userType === "admin" ? "管理员" : "考生" }}
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
           </div>
           <div class="user-bio-section-body">
             <div class="text-muted">
-              {{ userInfo.reg_time }}
+              {{ userInfo.regTime }}
             </div>
           </div>
         </div>

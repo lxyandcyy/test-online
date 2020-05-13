@@ -38,12 +38,15 @@
           </template>
           <!-- dropdown -->
           <v-list>
-            <v-list-item
-              v-for="(item, index) in dropdown_items"
-              :key="index"
-              @click="changeRouter(item.router)"
-            >
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
+            <v-list-item>
+              <router-link :to="{path:'/student-layout/profile'}" style="color: white">
+                <v-list-item-title >个人中心</v-list-item-title>
+              </router-link>
+            </v-list-item>
+            <v-list-item>
+              <router-link  :to="{}" style="color: white">
+                <v-list-item-title @click="logOut">退出</v-list-item-title>
+              </router-link>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -102,6 +105,13 @@ export default {
       }
       this.$router.push({ path: router });
     },
+    logOut(){
+      this.clearToken()
+      this.$router.push({path:'/main'})
+    },
+    clearToken(){
+      localStorage.clear();
+    }
   },
 };
 </script>

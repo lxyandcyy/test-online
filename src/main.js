@@ -4,7 +4,8 @@ import store from "./store";
 import router from "./router";
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
-import ElementUI from "element-ui";
+import {Loading,Message} from "element-ui";
+import ElementUI from 'element-ui'
 import "element-ui/lib/theme-chalk/index.css";
 import VueParticles from "vue-particles"; //引入粒子效果
 import axios from "axios";
@@ -16,7 +17,8 @@ import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 //全局注册
 Vue.use(Antd);
-Vue.use(ElementUI);
+Vue.use([Message,Loading]);
+Vue.use(ElementUI)
 Vue.use(VueParticles);
 Vue.prototype.$axios = axios;
 Vue.prototype.$api = api;

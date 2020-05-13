@@ -1,27 +1,26 @@
 <template>
   <div id="nav-bar">
-    <div class="right-menu">
-      <el-dropdown
-        class="avatar-container right-menu-item hover-effect"
-        trigger="click"
-      >
-        <div class="avatar-wrapper">
-          <span>{{ user_id }}</span>
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/layout/profile">
-            <el-dropdown-item>个人信息</el-dropdown-item>
+    <v-menu offset-y dark>
+      <template v-slot:activator="{ on }">
+        <!-- 头像 -->
+        <v-btn icon v-on="on">
+          <v-icon large>mdi-account-circle</v-icon>
+        </v-btn>
+      </template>
+      <!-- dropdown -->
+      <v-list>
+        <v-list-item>
+          <router-link :to="{path:'/layout/profile'}" style="color: white">
+            <v-list-item-title >个人中心</v-list-item-title>
           </router-link>
-          <router-link to="/layout">
-            <el-dropdown-item>主页</el-dropdown-item>
+        </v-list-item>
+        <v-list-item>
+          <router-link  :to="{}" style="color: white">
+            <v-list-item-title @click="logOut">退出</v-list-item-title>
           </router-link>
-          <el-dropdown-item @click.native="logout" divided
-            >退出</el-dropdown-item
-          >
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
 </template>
 
@@ -29,14 +28,14 @@
 export default {
   data() {
     return {
-      user_id: this.$store.state.user.user_id
     };
   },
-  created() {},
-  methods: {
-    logout() {
-      this.$router.push({ path: "/main" });
-      // 删除token
+  methods:{
+    logOut(){
+      this.clearToken()
+      this.$router.push({path:'/main'})
+    },
+    clearToken(){
       localStorage.clear();
     }
   }
@@ -45,7 +44,6 @@ export default {
 
 <style lang="scss" scoped>
 #nav-bar {
-  border: 1px solid black;
   width: 3rem;
   height: 2rem;
   line-height: 2rem;

@@ -6,12 +6,15 @@ import StudentLayout from "@/views/Student/StudentLayout";
 import Main from "@/views/Main";
 import Background from "@/views/Background";
 import { Message } from "element-ui";
+import Token from '@/utils/Token'
 
 import api from "../api/api"; // 导入api接口
 
 import question from "@/router/question";
 import paper from "@/router/paper";
 import result from "@/router/result";
+import subject from "@/router/subject";
+
 
 Vue.use(VueRouter);
 
@@ -22,13 +25,18 @@ const router = new VueRouter({
     {
       path: "/",
       component: Background,
-      redirect: "main",
+      redirect: "/main",
       children: [
-        // 登录、注册、修改页面 Main
+        // 登录、注册、修改、人脸绑定页面
         {
           path: "main",
           component: Main,
-          children: [{ path: "/", component: Main }],
+          children: [
+            {path: 'face-detect',name:'FaceDetect',component: ()=>import('@/views/Main/components/FaceDetect')},
+            {path: 'login',name:'Login',component: ()=>import('@/views/Main/components/Login')},
+            {path: 'register',name:'Register',component: ()=>import('@/views/Main/components/Register')},
+            {path: 'update-face',name:'UpdateFace',component: ()=>import('@/views/Main/components/UpdateFace')},
+          ],
         },
       ],
     },
@@ -39,32 +47,17 @@ const router = new VueRouter({
       redirect: "/layout/home",
       children: [
         //管理员主页
-        {
-          path: "home",
-          name: "Home",
-          component: () => import("@/views/Admin/Context/Home/Home"),
-        },
-        {
-          // 管理员个人信息
-          path: "profile",
-          name: "Profile",
-          component: () => import("@/views/Admin/Context/Profile/Profile"),
-        },
+        {path: "home", name: "Home", component: () => import("@/views/Admin/Context/Home/Home")},
+        // 管理员个人信息
+        {path: "profile", name: "Profile", component: () => import("@/views/Admin/Context/Profile/Profile"),},
         //用户管理-->学生列表
-        {
-          path: "student",
-          name: "Student",
-          component: () => import("@/views/Admin/Context/ManageUser/Student"),
-        },
+        {path: "student", name: "Student", component: () => import("@/views/Admin/Context/ManageUser/Student"),},
         //用户管理-->管理员列表
-        {
-          path: "admin",
-          name: "Admin",
-          component: () => import("@/views/Admin/Context/ManageUser/Admin"),
-        },
+        {path: "admin", name: "Admin", component: () => import("@/views/Admin/Context/ManageUser/Admin"),},
         ...question,
         ...paper,
         ...result,
+        ...subject
       ],
     },
     //  考生主页面的布局/student-layout
@@ -74,62 +67,30 @@ const router = new VueRouter({
       redirect: "/student-layout/home",
       children: [
         //考试中心
-        {
-          path: "exam-list",
-          name: "ExamList",
-          component: () => import("@/views/Student/Exam/ExamList"),
-        },
-
+        {path: "exam-list", name: "ExamList", component: () => import("@/views/Student/Exam/ExamList"),},
         //考生主页
-        {
-          path: "home",
-          name: "Home",
-          component: () => import("@/views/Student/Home/Home"),
-        },
+        {path: "home", name: "Home", component: () => import("@/views/Student/Home/Home"),},
         //错题列表页
-        {
-          path: "mistake-list",
-          name: "MistakeList",
-          component: () => import("@/views/Student/Mistake/MistakeList"),
-        },
+        {path: "mistake-list", name: "MistakeList", component: () => import("@/views/Student/Mistake/MistakeList"),},
         //智能训练页
-        {
-          path: "practice-list",
-          name: "PracticeList",
-          component: () => import("@/views/Student/Practice/PracticeList"),
-        },
+        {path: "practice-list", name: "PracticeList", component: () => import("@/views/Student/Practice/PracticeList"),},
         //个人中心
-        {
-          path: "profile",
-          name: "Profile",
-          component: () => import("@/views/Student/Profile/Profile"),
-        },
-        // ...question,
-        // ...paper,
-        // ...result,
+        {path: "profile", name: "Profile", component: () => import("@/views/Student/Profile/Profile"),},
       ],
     },
     //答题页面
-    {
-      path: "/do-exam",
-      name: "DoExam",
-      component: () => import("@/views/Student/Exam/DoExam"),
-    },
+    {path: "/do-exam", name: "DoExam", component: () => import("@/views/Student/Exam/DoExam"),},
     //智能训练答题页面
-    {
-      path: "/do-practice",
-      name: "DoPractice",
-      component: () => import("@/views/Student/Practice/DoPractice"),
-    },
+    {path: "/do-practice", name: "DoPractice", component: () => import("@/views/Student/Practice/DoPractice"),},
   ],
 });
+
+
 
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
   // 验证token是否有效
   if (to.path.match(/^\/layout/i) || to.path.match(/^\/student-layout/i)) {
-    console.log("userjfalskdfalsdhfaslkjdh");
-
     let log_token = localStorage.getItem("log_token");
     if (log_token !== null) {
       api.verifyToken(log_token).then((res) => {
@@ -139,7 +100,7 @@ router.beforeEach((to, from, next) => {
           next({ path: "/main" });
         } else {
           // token有效
-          getUserInfo(res.decoded.user_id).then(() => {
+          getUserInfo(res.decoded.condition.user_id).then(() => {
             next();
           });
         }
@@ -155,12 +116,17 @@ router.beforeEach((to, from, next) => {
 });
 
 let getUserInfo = (userId) => {
-  // 从用户信息表 (user_info) 获取个人用户基本信息（profile）
-  console.log("user_id:", userId);
   return api.SelUser({ user_id: userId }).then((res) => {
-    console.log("获取个人用户信息:", res);
-    store.commit("updateUser", res); //用户信息 存进vuex
+    console.log(res);
+    store.commit("updateUser",{
+      user_id:res.data.userId,
+      password:res.data.password,
+      user_type:res.data.userType,
+      reg_time:res.data.regTime,
+    }); //用户信息 存进vuex
   });
 };
+
+
 
 export default router;

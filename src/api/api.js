@@ -6,6 +6,8 @@ import user from "./user";
 import question from "./question";
 import paper from "./paper";
 import practice_paper from "./practice_paper";
+import subject from "./subject";
+
 
 export default {
   verifyToken: (token) => {
@@ -43,4 +45,11 @@ export default {
   SelPracticePaper: practice_paper.SelPracticePaper,
   EditPracticePaper: practice_paper.EditPracticePaper,
   DelPracticePaper: practice_paper.DelPracticePaper,
+
+
+  SubjectList:subject.SubjectList,
+  AddSubject:subject.AddSubject,
+  SelSubject:subject.SelSubject,
+  UpdateSubject:subject.UpdateSubject,
+  DelSubject:subject.DelSubject
 };

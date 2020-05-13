@@ -94,7 +94,7 @@ export default {
         correct: "",
         difficult: 0,
         create_time: "",
-        create_user: this.$store.state.user.user_id
+        create_user: this.$store.state.user.userId
       },
       rules: {
         subject_id: [

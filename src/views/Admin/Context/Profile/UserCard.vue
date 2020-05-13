@@ -1,46 +1,30 @@
 <template>
   <div id="user-card">
-    <el-card style="margin-bottom:20px;">
-      <div slot="header" class="clearfix">
-        <span>关于我</span>
-      </div>
+    <v-card class="pa-4" max-width="800px">
+      <v-card-title>
+        <v-icon small left>
+          关于我
+        </v-icon>
+      </v-card-title>
 
-      <div class="user-profile">
-        <div class="box-center">
-          <img
-            :src="
-              userInfo.imagePath === null
-                ? require('@/assets/avatar.gif')
-                : userInfo.imagePath
-            "
-            height="100px"
-            width="100px"
-            style="border-radius: 50px"
-          />
-        </div>
-        <div class="box-center">
-          <div class="user-name text-center">
-            {{ userInfo.user_id }}
-          </div>
-          <div class="user-role text-center text-muted">
-            {{ userInfo.user_type === "admin" ? "管理员" : "考生" }}
-          </div>
-        </div>
-      </div>
-
-      <div class="user-bio">
-        <div class="user-education user-bio-section">
-          <div class="user-bio-section-header">
-            <span>注册时间</span>
-          </div>
-          <div class="user-bio-section-body">
-            <div class="text-muted">
-              {{ userInfo.reg_time }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-card>
+      <v-col>
+        <v-row justify="center">
+          <v-avatar>
+            <img src="@/assets/avatar.gif" alt="John">
+          </v-avatar>
+        </v-row>
+        <v-row justify="center">
+          <strong>{{ userInfo.user_id }}</strong>
+        </v-row>
+        <v-row justify="center">
+        <span> {{ userInfo.user_type === "ADMIN" ? "管理员" : "考生" }}</span>
+        </v-row>
+        <v-divider class="mx-4"></v-divider>
+        <v-row >
+              <span>注册时间:{{ userInfo.reg_time }}</span>
+        </v-row>
+      </v-col>
+    </v-card>
   </div>
 </template>
 
@@ -54,8 +38,7 @@ export default {
         return {
           user_id: "",
           reg_time: "",
-          user_type: "",
-          imagePath: null
+          user_type: ""
         };
       }
     }
@@ -64,63 +47,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#user-card {
-  .box-center {
-    margin: 0 auto;
-    display: table;
-  }
-
-  .text-muted {
-    color: #777;
-  }
-
-  .user-profile {
-    .user-name {
-      font-weight: bold;
-    }
-
-    .box-center {
-      padding-top: 10px;
-    }
-
-    .user-role {
-      padding-top: 10px;
-      font-weight: 400;
-      font-size: 14px;
-    }
-
-    .box-social {
-      padding-top: 30px;
-
-      .el-table {
-        border-top: 1px solid #dfe6ec;
-      }
-    }
-
-    .user-follow {
-      padding-top: 20px;
-    }
-  }
-
-  .user-bio {
-    margin-top: 20px;
-    color: #606266;
-
-    span {
-      padding-left: 4px;
-    }
-
-    .user-bio-section {
-      font-size: 14px;
-      padding: 15px 0;
-
-      .user-bio-section-header {
-        border-bottom: 1px solid #dfe6ec;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-        font-weight: bold;
-      }
-    }
-  }
-}
 </style>

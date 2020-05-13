@@ -24,7 +24,7 @@
                 >考试时间：{{ paper.countdown }}分钟
               </span>
               <span class="question-title-padding"
-                >当前考生：{{ user.user_id }}</span
+                >当前考生：{{ user.userId }}</span
               >
             </div>
           </header>
@@ -257,13 +257,13 @@ export default {
     async submitExam() {
       this.dialog_tips.dialog = false;
       this.user.do_time = this.paper.countdown - this.remainTime; //计算做题耗时s
-      let res = await this.$api.SubmitExam({
-        formQueItems: this.formQueItems,
-        paper: this.paper,
-        user: this.user,
-      });
+      // let res = await this.$api.SubmitExam({
+      //   formQueItems: this.formQueItems,
+      //   paper: this.paper,
+      //   user: this.user,
+      // });
 
-      console.log("res:", res);
+      // console.log("res:", res);
     },
     // 倒计时
     timeReduce() {

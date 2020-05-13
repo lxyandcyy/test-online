@@ -1,6 +1,6 @@
 <template>
   <div id="update-face">
-    <div id="info-from" v-show="isInfo">
+    <div id="info-from">
       <div>
         <strong>人脸修改</strong>
       </div>
@@ -11,7 +11,7 @@
         <input type="password" placeholder="请输入密码" v-model="password" />
       </div>
       <div class="bt">
-        <a-radio-group @change="onChange" v-model="value">
+        <a-radio-group v-model="value">
           <a-radio :value="1">普通用户</a-radio>
           <a-radio :value="2">管理员</a-radio>
         </a-radio-group>
@@ -19,75 +19,66 @@
       <div class="bt">
         <button @click="UpdateFace()">点击修改人脸</button>
       </div>
-      <div class="bt">
-        <button @click="goBack()">返回</button>
-      </div>
-    </div>
-    <!-- 人脸修改页 -->
-    <div id="face-from" v-show="!isInfo">
-      <div>
-        <strong>修改人脸</strong>
-      </div>
-      <FaceDetect @changeIsInfo="ChangeIsInfo()" :father="father"></FaceDetect>
+      <router-link to="/main" style="color: white">
+        <div class="bt">
+          <button>返回</button>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import FaceDetect from "./FaceDetect";
-
 export default {
   data() {
     return {
       value: 1, //用户类型（管理员或普通用户）
-      user_id: this.$store.state.user.user_id,
-      password: this.$store.state.user.password,
-      isInfo: true, //是否是‘人脸修改’信息填写页
-      father: "update-face"
+      user_id: "",
+      password: ""
     };
   },
-  components: {
-    FaceDetect: FaceDetect
+  computed: {
+    user_type() {
+      return this.value === 1 ? "USER" : "ADMIN";
+    },
+
   },
   methods: {
-    onChange() {
-      console.log("asdf");
-    },
     UpdateFace() {
       this.DetectInfo();
       this.$store.commit("updateUser", {
-        user_id: this.user_id,
-        password: this.password
+        user_id:this.user_id,
+        password:this.password,
+        user_type:this.user_type
       });
     },
     DetectInfo() {
       this.$api
         .postDetectInfo({
-          user_id: this.user_id,
-          password: this.password
+          user_id:this.user_id,
+          password:this.password,
+          user_type:this.user_type
         })
         .then(res => {
-          switch (res.state) {
+          switch (res.code) {
             case 200:
-              this.isInfo = false;
-              this.$message.success(`${res.msg}`); //账户验证成功！
+              this.$message.loading(`${res.msg}`, 2,()=> {
+                this.$router.push({path:'/main/face-detect',query:{father:'update-face'}})//跳转到人脸检测页面
+              });//用户验证成功
               break;
             case 400:
-              this.$message.error(`${res.msg}`); //没有此用户！
+              this.$message.error(`${res.msg}`); //用户不存在，请先注册！
               break;
             case 401:
-              this.$message.error(`${res.msg}`); //密码错误！
+              this.$message.error(`${res.msg}`); //密码错误！请重新输入
+              break;
+            default:
+              this.$message.error(`未知错误！`);
               break;
           }
         })
         .catch(error => console.log(error));
     },
-    ChangeIsInfo(p) {
-      this.isInfo = p;
-    },
-    goBack() {
-      location.reload(); //刷新页面，相当于跳转到Main页面
-    }
   }
 };
 </script>
