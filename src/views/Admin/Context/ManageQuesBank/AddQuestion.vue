@@ -88,7 +88,7 @@ export default {
         options: [
           {
             label: "A",
-            isCorrect: 0,
+            isCorrect: false,
             description: ""
           },
         ],
@@ -122,14 +122,14 @@ export default {
       let options = this.options;
       let last = options[options.length - 1];
       let newLastLabel = String.fromCharCode(last.label.charCodeAt() + 1);
-      this.options.push({  label: newLastLabel,isCorrect:0, description: "" });
+      this.options.push({  label: newLastLabel,isCorrect:false, description: "" });
     },
     // 切换选项
     changeCorrectOption(index){
       this.options.forEach(item=>{
         item.isCorrect=0;
       })
-      this.options[index].isCorrect=1;
+      this.options[index].isCorrect=true;
       this.correctOption=this.options[index].label
     },
     clear(){
@@ -141,7 +141,7 @@ export default {
       this.options=[
         {
           label: "A",
-          isCorrect: 0,
+          isCorrect: false,
           description: ""
         },
       ]
