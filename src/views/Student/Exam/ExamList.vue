@@ -7,18 +7,17 @@
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
-          label="Search"
+          label="输入查询内容"
           single-line
           hide-details
         ></v-text-field>
       </v-card-title>
       <v-data-table :headers="headers" :items="desserts" :search="search">
-        <!-- 开始答题操作 -->
+        <!-- 操作 -->
         <template v-slot:item.action="slotScope">
           <router-link
             :to="{
-              path: '/do-exam',
-              query: { id: slotScope.item.id },
+              path: '/exam-paper/do/'+slotScope.item.id
             }"
           >
             <v-btn color="primary" small>开始答题</v-btn>
@@ -35,19 +34,11 @@ export default {
   data() {
     return {
       subject: "语文",
-      subjects: ["语文", "数学", "计算机", "英语"],
       search: "",
       headers: [
-        {
-          text: "序号",
-          align: "start",
-          value: "id",
-        },
         { text: "试卷名称", value: "name" },
-        { text: "考试时间(min)", value: "countdown" },
-
-        { text: "开始日期(Date)", value: "start_time" },
-        { text: "截止日期(Date)", value: "end_time" },
+        { text: "学科", value: "SubjectId" },
+        { text: "截止日期(Date)", value: "endTime" },
         { text: "操作", value: "action" },
       ],
       desserts: [],
@@ -60,17 +51,18 @@ export default {
     searchList() {
       let d = [];
       this.$api.PaperList().then((res) => {
-        console.log("试卷列表：", res);
-        res.forEach((item, index) => {
-          d.push({
-            key: index,
-            id: item.id,
-            subject_id: item.subject_id,
-            name: item.name,
-            countdown: item.countdown,
-            start_time: item.start_time,
-            end_time: item.end_time,
-          });
+        console.log(res);
+
+        res.data.forEach((item, index) => {
+          if(item.isPublish===true){//只展示发布了的试卷
+            d.push({
+              key: index,
+              id:item.id,
+              SubjectId: item.SubjectId,
+              name: item.name,
+              endTime: item.endTime,
+            });
+          }
         });
         this.desserts = d;
       });

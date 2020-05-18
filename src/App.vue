@@ -15,4 +15,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+  #app{
+    background:url("./assets/landscape.jpg") no-repeat ;
+    background-size: cover;
+  }
+</style>

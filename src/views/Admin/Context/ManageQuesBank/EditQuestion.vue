@@ -1,157 +1,185 @@
 <template>
   <div id="edit-question">
-    <el-form :model="form" ref="form" label-width="100px" :rules="rules">
-      <el-form-item label="学科" prop="subject_id" required>
-        <el-select v-model="form.subject_id" placeholder="请选择学科">
-          <!-- <el-option
-            v-for="(item, index) in QueType"
-            :key="index"
-            :value="item"
-            :label="item"
-          ></el-option> -->
-        </el-select>
-      </el-form-item>
-      <el-form-item label="题干：" prop="topic" required>
-        <el-input v-model="form.topic" />
-      </el-form-item>
-      <el-form-item label="选项：" prop="options" required>
-        <el-form-item
-          :label="item.prefix"
-          :key="item.prefix"
-          v-for="(item, index) in form.options"
-          label-width="50px"
-          class="question-item-label"
-        >
-          <el-input v-model="item.prefix" style="width:50px;" />
-          <el-input
-            v-model="item.content"
-            class="question-item-content-input"
-          />
-          <el-button
-            type="danger"
-            size="mini"
-            class="question-item-remove"
-            icon="el-icon-delete"
-            @click="questionItemRemove(index)"
-          ></el-button>
-        </el-form-item>
-      </el-form-item>
-      <el-form-item label="解析：" prop="parse" required>
-        <el-input v-model="form.parse" />
-      </el-form-item>
-      <el-form-item label="难度：" required>
-        <el-rate v-model="form.difficult" class="question-item-rate"></el-rate>
-      </el-form-item>
-      <el-form-item label="正确答案：" prop="correct" required>
-        <el-radio-group v-model="form.correct">
-          <el-radio
-            v-for="item in form.options"
-            :key="item.prefix"
-            :label="item.prefix"
-            >{{ item.prefix }}</el-radio
-          >
-        </el-radio-group>
-      </el-form-item>
-      <!-- 事件按钮 -->
-      <el-form-item>
-        <el-button type="primary" @click="submitForm">提交</el-button>
-        <el-button @click="resetForm">重置</el-button>
-        <el-button type="success" @click="questionItemAdd">添加选项</el-button>
-      </el-form-item>
-    </el-form>
+    <v-row justify="center">
+      <v-col cols="12" sm="9" md="8" lg="6">
+        <v-card ref="form">
+          <v-card-text >
+            <v-select
+                    v-model="selectSubjectName"
+                    :items="subjectsName"
+                    label="选择学科"
+                    required
+                    @change="selectSubject"
+            ></v-select>
+            <v-text-field
+                    v-model="question.topic"
+                    label="题干"
+                    required
+            ></v-text-field>
+            <!--            选项-->
+            <v-btn class="ma-2" tile color="green" dark @click="addOptions">添加选项</v-btn>
+            <v-btn class="ma-2" tile color="red" dark @click="removeOptions">删除选项</v-btn>
+            <v-col cols="12">
+              <v-text-field
+                      v-for="item in options"
+                      v-model="item.description"
+                      :label="item.label"
+                      clearable
+                      outlined
+              ></v-text-field>
+              <!--            正确答案-->
+              <v-radio-group  v-model="correctOption" :mandatory="false" row>
+                正确答案：
+                <v-radio
+                        :key="index"
+                        :label="item.label"
+                        :value="item.label"
+                        v-for="(item,index) in options"
+                        @click="changeCorrectOption(index)"
+                ></v-radio>
+              </v-radio-group>
+            </v-col>
+            <!--解析-->
+            <v-text-field
+                    v-model="question.analysis"
+                    label="解析"
+                    required
+            ></v-text-field>
+            <!--            难度-->
+            <v-col>
+              <v-row>
+                <label>难度:</label>
+                <v-rating
+                        v-model="question.difficult"
+                        color="yellow darken-3"
+                        background-color="grey darken-1"
+                        empty-icon="$ratingFull"
+                        hover
+                        dense
+                ></v-rating>
+              </v-row>
+            </v-col>
+            <v-divider class="mt-12"></v-divider>
+            <!--            操作-->
+            <v-card-actions>
+              <v-btn @click="clear">重置</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="primary"  @click="submit">提交</v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-export default {
-  created() {
-    //获取学科数据
-    // ......
-
-    let id = this.$route.query.id;
-    console.log("当前编辑的题目id是：", id);
-
-    //获取题目初始数据
-    this.$api.SelQue(id).then(res => {
-      console.log("当前编辑的题目初始数据是：", res);
-      this.form = res[0];
-    });
-  },
-  data() {
-    return {
-      form: {
-        id: null,
-        subject_id: 1,
-        gradeLevel: null,
-        topic: "",
+  export default {
+    created() {
+      this.searchSubject();
+      this.searchQuestion();
+    },
+    data() {
+      return {
+        question:{
+          topic: "",
+          SubjectId: "",
+          analysis: "",
+          difficult: 1,
+          createUser: "",
+        },
         options: [
-          { prefix: "A", content: "" },
-          { prefix: "B", content: "" },
-          { prefix: "C", content: "" },
-          { prefix: "D", content: "" }
+          {
+            label: "A",
+            isCorrect: 0,
+            description: ""
+          },
         ],
-        parse: "",
-        correct: "",
-        difficult: 0,
-        create_time: "",
-        create_user: this.$store.state.user.userId
+        subjects:[],
+        subjectsName:[],
+        selectSubjectName:'',
+        correctOption:""
+      };
+    },
+    methods: {
+      async searchSubject(){
+        // 获取学科数据
+        let res=await this.$api.SubjectList()
+        console.log(res)
+        this.subjects=res.data
+        this.subjects.forEach(item=>{
+          this.subjectsName.push(item.name)
+        })
       },
-      rules: {
-        subject_id: [
-          { required: true, message: "请选择学科", trigger: "change" }
-        ],
-        topic: [{ required: true, message: "请输入题干", trigger: "blur" }],
-        parse: [{ required: true, message: "请输入解析", trigger: "blur" }],
-        correct: [
-          { required: true, message: "请选择正确答案", trigger: "change" }
-        ]
-      }
-    };
-  },
-  methods: {
-    //移除某个选项A/B/C/D
-    questionItemRemove(index) {
-      this.form.options.splice(index, 1);
-    },
-    //添加选项
-    questionItemAdd() {
-      let options = this.form.options;
-      let last = options[options.length - 1];
-      let newLastPrefix = String.fromCharCode(last.prefix.charCodeAt() + 1);
-      options.push({ id: null, prefix: newLastPrefix, content: "" });
-    },
-    //提交新编辑好的题目数据
-    submitForm() {
-      //题目最新编辑时间=当前提交时间
-      this.form.create_time = Date.now();
-
-      this.$refs.form.validate(valid => {
-        //如果表单填写完整
-        if (valid) {
-          this.$api
-            .EditQue(this.form)
-            .then(res => {
-              console.log(res);
-              this.$message.success("题目编辑成功！");
-              //   跳转到‘题库列表’页面
-              this.$router.push({ path: "/layout/question-bank" });
-            })
-            .catch(e => {
-              console.log(e);
-              this.$message.error({ content: "题目提交失败，请检查网络！" });
-            });
-        } else {
-          this.$message.info("请把表单填写完整！");
-          return false;
-        }
-      });
-    },
-    // 重置
-    resetForm() {
-      this.$refs["form"].resetFields();
+      async searchQuestion(){
+        // 获取题目数据
+        let res=await this.$api.SelQue(this.$route.params.id)
+        console.log(res)
+        res.data.question.difficult=parseInt(res.data.question.difficult)
+        this.question=res.data.question;
+        this.options=res.data.options;
+        // 设置正确答案
+        this.options.forEach(item=>{
+          if(item.isCorrect===true){
+            this.correctOption=item.label
+          }
+        })
+        // 设置学科
+        this.subjects.forEach(item=>{
+          if(item.id===this.question.SubjectId){
+            this.selectSubjectName=item.name
+          }
+        })
+      },
+      selectSubject(){
+        this.subjects.forEach(item=>{
+          if(item.name===this.selectSubjectName){
+            this.question.SubjectId=item.id
+          }
+        })
+      },
+      removeOptions() {
+        let length=this.options.length-1
+        this.options.splice(length, 1);
+      },
+      addOptions() {
+        let options = this.options;
+        let last = options[options.length - 1];
+        let newLastLabel = String.fromCharCode(last.label.charCodeAt() + 1);
+        this.options.push({  label: newLastLabel,isCorrect:0, description: "" });
+      },
+      // 切换选项
+      changeCorrectOption(index){
+        this.options.forEach(item=>{
+          item.isCorrect=0;
+        })
+        this.options[index].isCorrect=1;
+        this.correctOption=this.options[index].label
+      },
+      clear(){
+        this.question={}
+        this.options={}
+        this.selectSubjectName='';
+        this.correctOption=''
+      },
+      async submit() {
+        // 。。。。
+        // this.question.createUser=this.$store.state.user.id;
+        // let res=await this.$api.AddQue({
+        //   ...this.question,
+        //   ...this.options
+        // })
+        // console.log(res);
+        // if(res.code===200){
+        //   this.$message.success("题目新增成功！");
+        //   //   返回到‘题库列表’页面
+        //   this.$router.push({ path: "/layout/question-bank" });
+        // }else {
+        //   this.$message.error("提交失败，请检查网络！");
+        // }
+      },
     }
-  }
-};
+  };
 </script>
 
 <style scoped></style>

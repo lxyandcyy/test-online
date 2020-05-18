@@ -18,7 +18,7 @@ import "material-design-icons-iconfont/dist/material-design-icons.css";
 //全局注册
 Vue.use(Antd);
 Vue.use([Message,Loading]);
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
 Vue.use(VueParticles);
 Vue.prototype.$axios = axios;
 Vue.prototype.$api = api;

@@ -1,132 +1,101 @@
 <template>
   <div id="paper-bank">
-    <!-- 查询栏 -->
-    <el-form :model="queryParam" ref="queryForm" :inline="true">
-      <el-form-item label="试卷ID：">
-        <el-input v-model="queryParam.id" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="学科：">
-        <el-select v-model="queryParam.subject_id" clearable>
-          <!-- <el-option
-            v-for="item in subjectFilter"
-            :key="item.id"
-            :value="item.id"
-            :label="item.name"
-          ></el-option> -->
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSearch">查询</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 试卷信息表 -->
-    <el-table :data="data" border fit highlight-current-row style="width: 100%">
-      <el-table-column prop="id" label="Id" width="90px" />
-      <el-table-column prop="subject_id" label="学科" width="120px" />
-      <el-table-column prop="name" label="试卷名称" show-overflow-tooltip />
-      <el-table-column prop="create_time" label="创建时间" width="160px" />
-      <el-table-column label="操作" align="center" width="220px">
-        <template slot-scope="{ row }">
-          <el-button size="mini" @click="editPaper(row)">编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="deletePaper(row)"
-            class="link-left"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!-- 翻页 -->
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="queryParam.pageIndex"
-      :limit.sync="queryParam.pageSize"
-      @pagination="changePage"
-    />
+    <v-card-title>
+      试卷列表
+      <v-spacer></v-spacer>
+      <v-text-field
+              v-model="table.search"
+              append-icon="mdi-magnify"
+              label="输入相关内容查询"
+              single-line
+              hide-details
+      ></v-text-field>
+      <router-link :to="{path:'/layout/exam-paper/add'}">
+        <v-btn class="ma-2" tile color="indigo" dark>新增试卷</v-btn>
+      </router-link>
+    </v-card-title>
+    <v-data-table
+            :headers="table.headers"
+            :items="table.desserts"
+            :search="table.search"
+    >
+      <!-- 操作 -->
+      <template v-slot:item.action="slotScope">
+        <router-link :to="{path:'/layout/exam-paper/look/'+slotScope.item.id}">
+          <v-btn class="mr-2" color="primary" fab small >
+            查看
+          </v-btn>
+        </router-link>
+        <router-link :to="{path:'/layout/exam-paper/edit/'+slotScope.item.id}">
+          <v-btn class="mr-2" color="orange" fab small dark >
+            编辑
+          </v-btn>
+        </router-link>
+        <v-btn class="mr-2" color="green" fab small >
+          发布
+        </v-btn>
+        <v-btn class="mr-2" color="error" fab small dark @click="deletePaper(slotScope.item.id)">
+          删除
+        </v-btn>
+      </template>
+    </v-data-table>
   </div>
 </template>
 
 <script>
-import Pagination from "@/components/Pagination";
-
 export default {
-  components: { Pagination },
   created() {
     // 获取学科数据
-    // 。。。
 
     //获取全部试卷
-    this.searchList();
+    // this.searchList();
   },
   data() {
     return {
-      all_data: [], //所有试卷列表数据
-      total: 0,
-      queryParam: {
-        //查询栏
-        id: null,
-        subject_id: null,
-        pageIndex: 1,
-        pageSize: 10,
+      table: {
+        search: "",
+        headers: [
+          { text: "ID", align: "start", value: "id" },
+          { text: "试卷名称", value: "name" },
+          { text: "学科", align: "start", value: "SubjectId" },
+          { text: "创建人", value: "createUser" },
+          { text: "创建时间(Date)", value: "createTime" },
+          { text: "发布时间(Date)", value: "startTime" },
+          { text: "截至时间(Date)", value: "endTime" },
+          { text: "是否发布", value: "isPublish" },
+          { text: "操作", value: "action" },
+        ],
+        desserts: [],
       },
     };
-  },
-  computed: {
-    //单页试卷列表数据
-    data() {
-      let page_start_index =
-        this.queryParam.pageSize * (this.queryParam.pageIndex - 1);
-      let d = this.all_data.slice(
-        page_start_index,
-        page_start_index + this.queryParam.pageSize + 1
-      );
-      return d;
-    },
   },
   methods: {
     async searchList() {
       let d = [];
       let res = await this.$api.PaperList();
-      console.log("试卷列表：", res);
-      res.forEach((item, index) => {
+      console.log(res);
+      res.data.forEach((item, index) => {
         d.push({
           key: index,
           id: item.id,
-          subject_id: item.subject_id,
-          name: item.name,
-          create_time: item.create_time,
+          name:item.name,
+          SubjectId: item.SubjectId,
+          createUser: item.createUser,
+          createTime: item.createTime,
+          startTime: item.startTime,
+          endTime: item.endTime,
+          isPublish: item.isPublish,
         });
       });
-      this.all_data = d;
-      this.total = this.all_data.length;
+      this.desserts = d;
     },
-    changePage(pageObj) {
-      this.queryParam.pageIndex = pageObj.page;
-      this.queryParam.pageSize = pageObj.limit;
-    },
-    //查询
-    onSearch(value) {
-      console.log(value);
-    },
-    editPaper(row) {
-      console.log("要编辑的单个试卷为：", row);
-      // 跳转到‘编辑’页面
-      this.$router.push({
-        path: "/layout/edit-paper",
-        query: { id: row.id },
-      });
-    },
-    deletePaper(row) {
-      let Id = row.id;
-      console.log("点击删除的item", row);
-      this.$api.DelPaper({ id: Id }).then((res) => {
+
+    deletePaper(id) {
+      console.log("点击删除的item", id);
+      this.$api.DelPaper({ id: id }).then((res) => {
         if (res.state === 200) {
-          this.data = this.data.filter((item) => item.id !== Id); // 删除指定id题目
           this.$message.success(res.msg);
+          this.searchList()
         } else {
           this.$message.error(res.msg);
         }

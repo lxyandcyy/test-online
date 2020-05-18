@@ -12,6 +12,7 @@ export default new Vuex.Store({
     },
     access_token: "",
     user: {
+      id:'',
       user_id: "",
       password: "",
       user_type: "USER",
@@ -24,11 +25,12 @@ export default new Vuex.Store({
     },
     updateUser(state, obj) {
       [
+        state.user.id,
         state.user.user_id,
         state.user.password,
         state.user.user_type,
         state.user.reg_time
-      ] = [obj.user_id, obj.password, obj.user_type, obj.reg_time];
+      ] = [obj.id,obj.user_id, obj.password, obj.user_type, obj.reg_time];
     }
   },
 });

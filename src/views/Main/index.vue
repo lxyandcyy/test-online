@@ -56,7 +56,8 @@ $div-count: 6;
   transform: translate(-50%, -50%);
   width: $login-width;
   height: $login-height;
-  background: rgba(38, 52, 69, 1);
+  background: rgba(39, 39, 39,1);
+  box-shadow: 2px 2px 8px rgba(43, 20, 20, 0.8);
   color: white;
   margin: 0 auto;
 
@@ -73,7 +74,7 @@ $div-count: 6;
       width: 80%;
       height: 80%;
       line-height: 80%;
-      background: rgba(38, 52, 69, 0.8);
+      background: rgba(54, 54, 54,1);
       box-shadow: 2px 2px 8px rgba(43, 20, 20, 0.8);
     }
 

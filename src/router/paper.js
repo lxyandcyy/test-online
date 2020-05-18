@@ -1,27 +1,30 @@
 export default [
   // 试卷管理-->试卷列表  路径：/layout/paper-bank
   {
-    path: "paper-bank",
+    path: "exam-paper",
     name: "PaperBank",
     component: () => import("@/views/Admin/Context/ManagePaper/PaperBank"),
   },
   // 试卷管理-->新增试卷
   {
-    path: "add-paper",
+    path: "exam-paper/add",
     name: "AddPaper",
     component: () => import("@/views/Admin/Context/ManagePaper/AddPaper"),
   },
   // 试卷管理-->编辑试卷
   {
-    path: "edit-paper",
+    path: "exam-paper/look/:id",
     name: "EditPaper",
     component: () => import("@/views/Admin/Context/ManagePaper/EditPaper"),
   },
-  //智能试卷列表
+  // 试卷管理-->编辑试卷
   {
-    path: "practice-paper-bank",
-    name: "PracticePaperBank",
-    component: () =>
-      import("@/views/Admin/Context/ManagePaper/PracticePaperBank"),
+    path: "exam-paper/edit/:id",
+    name: "EditPaper",
+    component: () => import("@/views/Admin/Context/ManagePaper/EditPaper"),
   },
+
+  //智能试卷列表
+  {path: "practice-paper", name: "PracticePaperBank", component: () => import("@/views/Admin/Context/ManagePaper/PracticePaperBank"),},
+
 ];

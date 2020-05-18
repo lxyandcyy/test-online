@@ -79,9 +79,9 @@ const router = new VueRouter({
       ],
     },
     //答题页面
-    {path: "/do-exam", name: "DoExam", component: () => import("@/views/Student/Exam/DoExam"),},
+    {path: "/exam-paper/do/:id", name: "DoExam", component: () => import("@/views/Student/Exam/DoExam"),},
     //智能训练答题页面
-    {path: "/do-practice", name: "DoPractice", component: () => import("@/views/Student/Practice/DoPractice"),},
+    {path: "/practice-paper/do/:id", name: "DoPractice", component: () => import("@/views/Student/Practice/DoPractice"),},
   ],
 });
 
@@ -119,6 +119,7 @@ let getUserInfo = (userId) => {
   return api.SelUser({ user_id: userId }).then((res) => {
     console.log(res);
     store.commit("updateUser",{
+      id:res.data.id,
       user_id:res.data.userId,
       password:res.data.password,
       user_type:res.data.userType,

@@ -93,8 +93,8 @@ export default {
           action: 'gavel',
           title: '试卷管理',
           items: [
-            { title: '智能训练试卷管理' ,path:'/layout/practice-paper-bank'},
-            { title: '测试试卷管理' ,path:'/layout/paper-bank'},
+            { title: '智能训练试卷管理' ,path:'/layout/practice-paper'},
+            { title: '测试试卷管理' ,path:'/layout/exam-paper'},
           ],
         },
         {

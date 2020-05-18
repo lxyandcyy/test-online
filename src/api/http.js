@@ -46,22 +46,3 @@ export function post(url, body) {
       });
   });
 }
-
-/**
- * 封装post方法
- * post方法，对应post请求
- * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
- */
-export function deleted(url, body) {
-  return new Promise((resolve, reject) => {
-    axios
-      .delete(url, body)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err.data);
-      });
-  });
-}

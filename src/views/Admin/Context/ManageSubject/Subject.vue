@@ -10,7 +10,7 @@
                     single-line
                     hide-details
             ></v-text-field>
-            <router-link :to="{path:'/layout/add-subject'}">
+            <router-link :to="{path:'/layout/subject/add'}">
                 <v-btn class="ma-2" tile color="indigo" dark>新增学科</v-btn>
             </router-link>
         </v-card-title>

@@ -8,13 +8,20 @@ export default [
   },
   // 题库管理-->新增题目
   {
-    path: "add-question",
+    path: "question/add",
     name: "AddQuestion",
     component: () => import("@/views/Admin/Context/ManageQuesBank/AddQuestion"),
   },
+  // 题库管理-->查看题目
+  {
+    path: "question/look/:id",
+    name: "LookQuestion",
+    component: () =>
+        import("@/views/Admin/Context/ManageQuesBank/LookQuestion"),
+  },
   // 题库管理-->编辑题目
   {
-    path: "edit-question",
+    path: "question/edit/:id",
     name: "EditQuestion",
     component: () =>
       import("@/views/Admin/Context/ManageQuesBank/EditQuestion"),

@@ -15,16 +15,18 @@
       <v-content>
         <v-container>
           <header class="paper-header">
-            <h1>{{ paper.name }}</h1>
+            <h1>{{ examPaper.name }}</h1>
             <div>
               <span class="question-title-padding"
-                >试卷总分：{{ paper.paper_score }}
+                >试卷总分：{{ examPaper.PaperScore }}
               </span>
               <span class="question-title-padding"
-                >考试时间：{{ paper.countdown }}分钟
+                >考试时间：{{ examPaper.countDown }}分钟
               </span>
               <span class="question-title-padding"
-                >当前考生：{{ user.userId }}</span
+                >当前考生：lxy
+<!--                {{ user.userId }}-->
+              </span
               >
             </div>
           </header>
@@ -39,7 +41,8 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <v-list-item-title class="headline mb-1">
-                  {{ current_question + 1 }}.{{ formQueItem.topic }}
+<!--                  {{ current_question + 1 }}.{{ formQueItem.topic }}-->
+                  2018的负数为？
                 </v-list-item-title>
                 <!-- 选项列表 -->
                 <v-list-item-subtitle>
@@ -49,14 +52,27 @@
                       active-class="purple"
                       v-model="current_option"
                     >
-                      <v-chip
-                        class="option"
-                        v-for="(item, i) in formQueItem.options"
-                        :key="i"
-                        @click="toggleOption(i)"
-                      >
-                        {{ item.prefix }}.
-                        {{ item.content }}
+<!--                      <v-chip-->
+<!--                        class="option"-->
+<!--                        v-for="(item, i) in examPaper.questions.options"-->
+<!--                        :key="i"-->
+<!--                        @click="toggleOption(i)"-->
+<!--                      >-->
+<!--                        {{ item.prefix }}.-->
+<!--                        {{ item.content }}-->
+<!--                      </v-chip>-->
+
+                      <v-chip class="option">
+                        A. 2018
+                      </v-chip>
+                      <v-chip class="option">
+                        B. -2018
+                      </v-chip>
+                      <v-chip class="option">
+                        C. 20
+                      </v-chip>
+                      <v-chip class="option">
+                        D. 0
                       </v-chip>
                     </v-chip-group>
                   </v-item>
@@ -129,11 +145,6 @@
       </v-card>
     </v-dialog>
 
-    <SnackBar
-      :snackbar="snackbar_tips.snackbar"
-      :text="snackbar_tips.text"
-      @input="snackbar_tips.snackbar = $event"
-    ></SnackBar>
   </div>
 </template>
 
@@ -144,54 +155,29 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      snackbar_tips: {
-        //提示信息
-        snackbar: false,
-        text: "",
-      },
       dialog_tips: {
         dialog: false, //是否弹出对话框
         card_title: "",
       },
-      testValue: 0,
-      sheet_color: "white",
       current_paper_id: this.$route.query.id,
       current_question: 0,
       current_option: -1, //当前选项
       sheet: false,
       remainTime: 0,
       timer: null,
-      formQueItems: [], //题目列表
-      paper: {
-        //试卷列表
-        id: 1,
-        name: "",
-        subject_id: "",
-        grade_level: "",
-        paper_score: "",
-        question_count: "",
-        countdown: "",
-        frame_text_content_id: "",
-        create_user: "",
-        create_time: "",
-        deleted: "",
-        task_exam_id: "",
-        end_time: "",
-        start_time: "",
+      examPaper: {
+        // name: "",
+        // countDown: 0,
+        // createUser: 0,
+        // SubjectId: 0,
+        // startTime:"",
+        // endTime:"",
+        // questions: [], //题目列表
       },
     };
   },
   created() {
-    this.$api.SelPaper(this.$route.query.id).then((res) => {
-      this.paper = res.pap;
-      this.remainTime = this.paper.countdown * 60; //倒计时起始值
-      this.timeReduce(); //倒计时
-      this.formQueItems = res.questionItems;
-      this.formQueItems.forEach((item) => {
-        return (item.current_option = -1);
-      });
-      console.log("当前编辑的试卷：", this.paper, this.formQueItems);
-    });
+    this.searchPaper();
   },
   computed: {
     ...mapState(["user"]),
@@ -201,13 +187,26 @@ export default {
     },
   },
   methods: {
+    searchPaper(){
+      this.$api.SelPaper(this.$route.params.id).then((res) => {
+        console.log(res)
+        let questions= res.data.examPaper_question.map(item=>{item.current_option=-1;return item})
+        this.examPaper={
+          ...res.data.examPaper,
+          questions:questions
+        }
+        this.remainTime = this.examPaper.countDown * 60; //倒计时起始值
+        // this.timeReduce(); //倒计时
+        console.log(this.examPaper)
+      });
+    },
     nextQue() {
       if (this.current_question < this.formQueItems.length - 1) {
         this.getOptionFromQueItems(++this.current_question);
         console.log("当前题目号为：", this.current_question + 1);
       } else {
-        this.snackbar_tips.snackbar = true;
-        this.snackbar_tips.text = "没有题目了";
+        // this.snackbar_tips.snackbar = true;
+        // this.snackbar_tips.text = "没有题目了";
       }
       return;
     },
@@ -217,8 +216,8 @@ export default {
         console.log(this.current_option);
         console.log("当前题目号为：", this.current_question + 1);
       } else {
-        this.snackbar_tips.snackbar = true;
-        this.snackbar_tips.text = "没有题目了";
+        // this.snackbar_tips.snackbar = true;
+        // this.snackbar_tips.text = "没有题目了";
       }
       return;
     },
@@ -269,8 +268,8 @@ export default {
     timeReduce() {
       this.timer = setInterval(() => {
         if (this.remainTime <= 0) {
-          this.snackbar_tips.snackbar = true;
-          this.snackbar_tips.text = "时间到！系统自动提交试卷。。";
+          // this.snackbar_tips.snackbar = true;
+          // this.snackbar_tips.text = "时间到！系统自动提交试卷。。";
           setTimeout(() => {
             this.submitExam();
           }, 2000);

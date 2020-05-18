@@ -1,159 +1,205 @@
 <template>
   <div id="add-paper">
     <!-- 表单 -->
-    <el-form :model="form" ref="form" label-width="100px" :rules="rules">
-      <el-form-item label="学科" prop="subject_id" required>
-        <el-select v-model="form.subject_id" placeholder="请选择学科">
-          <!-- <el-option
-            v-for="(item, index) in QueType"
-            :key="index"
-            :value="item"
-            :label="item"
-          ></el-option> -->
-        </el-select>
-      </el-form-item>
-      <el-form-item label="试卷名称：" prop="name" required>
-        <el-input v-model="form.name" />
-        <el-button
-          type="text"
-          class="link-left"
-          style="margin-left: 20px"
-          size="mini"
-          @click="addQuestion()"
-        >
-          添加题目
-        </el-button>
-        <!-- 所选题目的卡片列表 -->
-        <el-card
-          class="exampaper-item-box"
-          v-if="form.questionItems.length !== 0"
-        >
-          <el-form-item
-            :key="index"
-            :label="'题目' + (index + 1) + '：'"
-            v-for="(item, index) in form.questionItems"
-            style="margin-bottom: 15px"
-          >
-            <el-row>
-              <el-col :span="23">
-                <QuestionShow :question="item" />
-              </el-col>
-              <el-col :span="1">
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="form.questionItems.splice(index, 1)"
-                  >删除</el-button
-                >
-              </el-col>
-            </el-row>
-          </el-form-item>
-        </el-card>
-      </el-form-item>
-      <el-form-item label="时长：" prop="countdown" required>
-        <el-input v-model="form.countdown" placeholder="分钟" />
-      </el-form-item>
-      <!-- 事件按钮 -->
-      <el-form-item>
-        <el-button type="primary" @click="submitForm">提交</el-button>
-        <el-button @click="resetForm">重置</el-button>
-      </el-form-item>
-    </el-form>
+<!--    <el-form :model="form" ref="form" label-width="100px" :rules="rules">-->
+<!--      <el-form-item label="学科" prop="subject_id" required>-->
+<!--        <el-select v-model="form.subject_id" placeholder="请选择学科">-->
+<!--          &lt;!&ndash; <el-option-->
+<!--            v-for="(item, index) in QueType"-->
+<!--            :key="index"-->
+<!--            :value="item"-->
+<!--            :label="item"-->
+<!--          ></el-option> &ndash;&gt;-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="试卷名称：" prop="name" required>-->
+<!--        <el-input v-model="form.name" />-->
+<!--        <el-button-->
+<!--          type="text"-->
+<!--          class="link-left"-->
+<!--          style="margin-left: 20px"-->
+<!--          size="mini"-->
+<!--          @click="addQuestion()"-->
+<!--        >-->
+<!--          添加题目-->
+<!--        </el-button>-->
+<!--        &lt;!&ndash; 所选题目的卡片列表 &ndash;&gt;-->
+<!--        <el-card-->
+<!--          class="exampaper-item-box"-->
+<!--          v-if="form.questionItems.length !== 0"-->
+<!--        >-->
+<!--          <el-form-item-->
+<!--            :key="index"-->
+<!--            :label="'题目' + (index + 1) + '：'"-->
+<!--            v-for="(item, index) in form.questionItems"-->
+<!--            style="margin-bottom: 15px"-->
+<!--          >-->
+<!--            <el-row>-->
+<!--              <el-col :span="23">-->
+<!--                <QuestionShow :question="item" />-->
+<!--              </el-col>-->
+<!--              <el-col :span="1">-->
+<!--                <el-button-->
+<!--                  type="text"-->
+<!--                  size="mini"-->
+<!--                  @click="form.questionItems.splice(index, 1)"-->
+<!--                  >删除</el-button-->
+<!--                >-->
+<!--              </el-col>-->
+<!--            </el-row>-->
+<!--          </el-form-item>-->
+<!--        </el-card>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="时长：" prop="countdown" required>-->
+<!--        <el-input v-model="form.countdown" placeholder="分钟" />-->
+<!--      </el-form-item>-->
+<!--      &lt;!&ndash; 事件按钮 &ndash;&gt;-->
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" @click="submitForm">提交</el-button>-->
+<!--        <el-button @click="resetForm">重置</el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
 
     <!-- 添加题目弹出框 -->
-    <el-dialog :visible.sync="questionPage.showDialog" width="70%">
-      <!-- 题目查询栏 -->
-      <el-form :model="questionPage.queryParam" ref="queryForm" :inline="true">
-        <el-form-item label="ID：">
-          <el-input v-model="questionPage.queryParam.id" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="题干：">
-          <el-input
-            v-model="questionPage.queryParam.topic"
-            clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="queryForm">查询</el-button>
-        </el-form-item>
-      </el-form>
-      <!-- 题目列表 -->
-      <el-table
-        v-loading="questionPage.listLoading"
-        :data="questionPage.tableData"
-        @selection-change="handleSelectionChange"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%"
-      >
-        <el-table-column type="selection" width="35"></el-table-column>
-        <el-table-column prop="id" label="Id" width="60px" />
-        <el-table-column prop="subject_id" label="学科" width="70px" />
-        <el-table-column prop="topic" label="题干" show-overflow-tooltip />
-      </el-table>
-      <!-- <pagination
-        v-show="questionPage.total > 0"
-        :total="questionPage.total"
-        :page.sync="questionPage.queryParam.pageIndex"
-        :limit.sync="questionPage.queryParam.pageSize"
-        @pagination="search"
-      /> -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="questionPage.showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="confirmQuestionSelect"
-          >确定</el-button
-        >
-      </span>
-    </el-dialog>
+<!--    <el-dialog :visible.sync="questionPage.showDialog" width="70%">-->
+<!--      &lt;!&ndash; 题目查询栏 &ndash;&gt;-->
+<!--      <el-form :model="questionPage.queryParam" ref="queryForm" :inline="true">-->
+<!--        <el-form-item label="ID：">-->
+<!--          <el-input v-model="questionPage.queryParam.id" clearable></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="题干：">-->
+<!--          <el-input-->
+<!--            v-model="questionPage.queryParam.topic"-->
+<!--            clearable-->
+<!--          ></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item>-->
+<!--          <el-button type="primary" @click="queryForm">查询</el-button>-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
+<!--      &lt;!&ndash; 题目列表 &ndash;&gt;-->
+<!--      <el-table-->
+<!--        v-loading="questionPage.listLoading"-->
+<!--        :data="questionPage.tableData"-->
+<!--        @selection-change="handleSelectionChange"-->
+<!--        border-->
+<!--        fit-->
+<!--        highlight-current-row-->
+<!--        style="width: 100%"-->
+<!--      >-->
+<!--        <el-table-column type="selection" width="35"></el-table-column>-->
+<!--        <el-table-column prop="id" label="Id" width="60px" />-->
+<!--        <el-table-column prop="subject_id" label="学科" width="70px" />-->
+<!--        <el-table-column prop="topic" label="题干" show-overflow-tooltip />-->
+<!--      </el-table>-->
+<!--      &lt;!&ndash; <pagination-->
+<!--        v-show="questionPage.total > 0"-->
+<!--        :total="questionPage.total"-->
+<!--        :page.sync="questionPage.queryParam.pageIndex"-->
+<!--        :limit.sync="questionPage.queryParam.pageSize"-->
+<!--        @pagination="search"-->
+<!--      /> &ndash;&gt;-->
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--        <el-button @click="questionPage.showDialog = false">取 消</el-button>-->
+<!--        <el-button type="primary" @click=""-->
+<!--          >确定</el-button-->
+<!--        >-->
+<!--      </span>-->
+<!--    </el-dialog>-->
+
+    <v-row justify="center">
+      <v-col cols="12" sm="9" md="8" lg="6">
+        <v-card ref="form">
+          <v-card-text >
+            <v-select
+                    v-model="selectSubjectName"
+                    :items="subjectsName"
+                    label="选择学科"
+                    required
+                    @change="selectSubject"
+            ></v-select>
+            <v-text-field
+                    v-model="topic"
+                    label="试卷名称"
+                    required
+            ></v-text-field>
+            <!--            选项-->
+            <v-btn class="ma-2" tile color="green" dark @click.stop="dialog=true">添加题目</v-btn>
+
+<!--            导入的所有题目-->
+            <v-col cols="12">
+
+            </v-col>
+
+<!--            弹出框选择题目导入-->
+            <v-dialog v-model="dialog" max-width="290">
+              <v-card>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="dialog = false">取消
+                  </v-btn>
+                  <v-btn color="green darken-1" text @click="dialog = false">
+                    确定
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <v-text-field
+                    v-model="countDown"
+                    label="考试时长(单位分钟)"
+                    required
+            ></v-text-field>
+            <v-divider class="mt-12"></v-divider>
+            <!--            操作-->
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary"  @click="submit">提交</v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-import QuestionShow from "@/components/Show";
 
 export default {
-  components: { QuestionShow },
   created() {
     //获取学科数据
   },
   data() {
     return {
-      form: {
-        id: null,
-        subject_id: 1,
-        name: "",
-        countdown: null,
-        questionItems: [] //card中显示所选的题目列表数据
-      },
-      questionPage: {
-        multipleSelection: [], //所选题目列表
-        showDialog: false,
-        queryParam: {
-          id: null,
-          subject_id: 1,
-          pageIndex: 1,
-          pageSize: 5
-        },
-        listLoading: true,
-        tableData: [], //所有题目
-        total: 0
-      },
-      rules: {
-        subject_id: [
-          { required: true, message: "请选择学科", trigger: "change" }
-        ],
-        name: [{ required: true, message: "请输入试卷名称", trigger: "blur" }],
-        countdown: [
-          { required: true, message: "请输入考试时长", trigger: "blur" }
+      examPaper:{
+        name:"",
+        countDown:0,
+        createUser:"",
+        SubjectId:"",
+        question:[
+          // {
+          //   id:40,
+          //   score:10
+          // }
         ]
-      }
+      },
+     dialog:false,
+      subjects:[],
+      subjectsName:[],
+      selectSubjectName:'',
     };
   },
   methods: {
     addQuestion() {
       this.search();
       this.questionPage.showDialog = true;
+    },
+    selectSubject(){
+      this.subjects.forEach(item=>{
+        if(item.name===this.selectSubjectName){
+          this.SubjectId=item.id
+        }
+      })
     },
     search() {
       //   翻页||加载题目列表
@@ -168,26 +214,9 @@ export default {
       });
     },
     // 重置
-    resetForm() {
-      this.$refs["form"].resetFields();
-    },
-    // 查询
-    queryForm() {},
-    //题目选择复选框改变时
-    handleSelectionChange(val) {
-      this.questionPage.multipleSelection = val;
-      console.log(val);
-    },
-    confirmQuestionSelect() {
-      this.questionPage.multipleSelection.forEach(q => {
-        this.form.questionItems.push(q);
-      });
-      this.questionPage.showDialog = false;
-    },
-    submitForm() {
-      //题目创建时间=当前提交时间
-      this.form.create_time = Date.now();
+    clear() {},
 
+    submit() {
       this.$refs.form.validate(valid => {
         //如果表单填写完整
         if (valid) {
@@ -214,8 +243,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.exampaper-item-box {
-  .q-item-content {
-  }
-}
 </style>
