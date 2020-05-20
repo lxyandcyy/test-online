@@ -22,6 +22,8 @@ module.exports = {
         })
     )
 
+
+
     // 公共代码抽离
     config.optimization = {
       splitChunks: {

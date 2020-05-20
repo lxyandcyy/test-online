@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <div id="info-form">
+<!--    <div id="info-form">-->
       <div>
         <strong>用户登录</strong>
       </div>
@@ -21,7 +21,7 @@
           <button>返回</button>
         </div>
       </router-link>
-    </div>
+<!--    </div>-->
   </div>
 </template>
 

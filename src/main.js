@@ -10,9 +10,12 @@ import vuetify from "./plugins/vuetify";
 import "vuetify/dist/vuetify.min.css";
 import "@mdi/font/css/materialdesignicons.css";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
+import {Radio} from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
 
 //全局注册
 Vue.use([Message,Loading]);
+Vue.use(Radio);
 Vue.prototype.$axios = axios;
 Vue.prototype.$api = api;
 
