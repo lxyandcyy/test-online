@@ -6,6 +6,22 @@ module.exports = {
     "vuetify"
   ],
   productionSourceMap: false,
+  // 图片cdn
+  // chainWebpack: config => {
+  //   config
+  //       .module
+  //       .rule("images")
+  //       .test(/\.(jpg|png|gif)$/)
+  //       .use("url-loader")
+  //       .loader("url-loader")
+  //       .options({
+  //         limit:10,
+  //         publicPath: 'https://oss.xx.com/img' ,
+  //         outputPath: 'img',
+  //         name: '[name].[ext]',
+  //       })
+  //       .end();
+  // },
   configureWebpack:config=>{
     // gzip压缩
     const productionGzipExtensions = ['html', 'js', 'css']

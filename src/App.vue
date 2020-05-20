@@ -17,7 +17,7 @@ export default {
 
 <style scoped>
   #app{
-    background:url("./assets/landscape.jpg") no-repeat ;
+    background:url("https://s1.ax1x.com/2020/05/20/YojNw9.jpg") no-repeat ;
     background-size: cover;
   }
 </style>

@@ -10,7 +10,7 @@
       <v-col>
         <v-row justify="center">
           <v-avatar>
-            <img src="@/assets/avatar.gif" alt="John">
+            <img src="https://s1.ax1x.com/2020/05/20/YojzlT.gif" alt="John">
           </v-avatar>
         </v-row>
         <v-row justify="center">
