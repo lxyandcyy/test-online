@@ -25,9 +25,6 @@
 
 <script>
     export default {
-        created() {
-            this.search();
-        },
         data() {
             return {
                 name:"",

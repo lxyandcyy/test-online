@@ -119,21 +119,44 @@
                     @change="selectSubject"
             ></v-select>
             <v-text-field
-                    v-model="topic"
+                    v-model="examPaper.name"
                     label="试卷名称"
                     required
             ></v-text-field>
             <!--            选项-->
             <v-btn class="ma-2" tile color="green" dark @click.stop="dialog=true">添加题目</v-btn>
-
+            <v-btn class="ma-2" tile color="red" dark >删除题目</v-btn>
 <!--            导入的所有题目-->
-            <v-col cols="12">
-
+            <v-col
+                    v-for="(item, i) in questions"
+                    :key="i"
+                    cols="12"
+                    class="mx-auto"
+            >
+              <v-card color="#26c6da" >
+                <v-card-title>题号：{{item.id}} <v-spacer></v-spacer>分数：{{item.score}}</v-card-title>
+                <v-card-subtitle>{{item.topic}} <v-spacer></v-spacer></v-card-subtitle>
+              </v-card>
             </v-col>
 
 <!--            弹出框选择题目导入-->
             <v-dialog v-model="dialog" max-width="290">
               <v-card>
+<!--题目表格                -->
+                <v-data-table
+                        v-model="selected"
+                        :headers="headers"
+                        :items="desserts"
+                        :single-select="singleSelect"
+                        item-key="name"
+                        show-select
+                        class="elevation-1"
+                >
+                  <template v-slot:top>
+                    <v-switch v-model="singleSelect" label="Single select" class="pa-3"></v-switch>
+                  </template>
+                </v-data-table>
+<!--操作-->
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="green darken-1" text @click="dialog = false">取消
@@ -146,7 +169,7 @@
             </v-dialog>
 
             <v-text-field
-                    v-model="countDown"
+                    v-model="examPaper.countDown"
                     label="考试时长(单位分钟)"
                     required
             ></v-text-field>
@@ -177,16 +200,44 @@ export default {
         createUser:"",
         SubjectId:"",
         question:[
-          // {
-          //   id:40,
-          //   score:10
-          // }
+          {
+            id:40,
+            score:10
+          }
         ]
       },
+      questions:[   {
+        id:40,
+        topic:'地球是不是圆的？',
+        score:10
+      }],
      dialog:false,
       subjects:[],
       subjectsName:[],
       selectSubjectName:'',
+      table:{
+        singleSelect:false,
+        selected:[],
+        headers:[
+          {
+            text:'ID',
+            value:'id'
+          },{
+            text:'题干',
+            value:'topic'
+          },{
+            text:'学科',
+            value:'SubjectId'
+          },{
+            text:'难度',
+            value:'difficult'
+          },{
+            text:'分数',
+            value:'score'
+          }
+        ],
+        desserts:[]
+      }
     };
   },
   methods: {

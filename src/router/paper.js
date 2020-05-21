@@ -11,12 +11,12 @@ export default [
     name: "AddPaper",
     component: () => import("@/views/Admin/Context/ManagePaper/AddPaper"),
   },
-  // 试卷管理-->编辑试卷
-  {
-    path: "exam-paper/look/:id",
-    name: "EditPaper",
-    component: () => import("@/views/Admin/Context/ManagePaper/EditPaper"),
-  },
+  // 试卷管理-->查看试卷
+  // {
+  //   path: "exam-paper/look/:id",
+  //   name: "LookPaper",
+  //   component: () => import("@/views/Admin/Context/ManagePaper/EditPaper"),
+  // },
   // 试卷管理-->编辑试卷
   {
     path: "exam-paper/edit/:id",

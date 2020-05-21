@@ -71,7 +71,7 @@
                 this.$api.DelSubject(id).then(res=>{
                     console.log(res)
                     if(res.code===200){
-                        this.$message.success('删除成功！',1)
+                        this.$message.success('删除成功！')
                         this.searchList()
                     }
                 }).catch(err=>console.log(err))

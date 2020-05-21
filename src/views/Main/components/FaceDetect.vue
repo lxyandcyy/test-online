@@ -88,9 +88,8 @@
           switch (res.error_code) {
             case 0:
               this.detectTips = "人脸绑定成功！";
-              this.$message.loading('人脸绑定成功！',2,()=>{
-                this.$router.push({path:'/main'})
-              })
+              this.$message.success('人脸绑定成功！');
+              this.$router.push({path:'/main'});
               break;
             case 2213105:
               this.detectTips = "该账号已经绑定过人脸啦~请返回注册";
@@ -131,7 +130,7 @@
                 this.saveTolocalStorage({
                   log_token: res["log_token"]
                 });//log_token存入localStorage
-                this.$message.loading("登录成功", 2,()=>{
+                this.$message.success("登录成功")
                   // 判断用户类型，若为USER跳转到/student-layout（考生页面）,若为ADMIN跳转到/Layout（管理员页面）
                   switch (res.result.user_list[0].group_id) {
                     case "USER":
@@ -143,15 +142,19 @@
                       this.$router.push({path: "/layout"});
                       break;
                   }
-                });
               } else {
                 this.dengdai("没有匹配到相应用户，正在重新检测。。");
               }
               break;
             case 222018:
-              this.$message.loading('没有用户信息,正在返回上一级。。',2,()=>{
+              this.$message.info('没有用户信息,返回上一级。。');
+              setTimeout( ()=> {
                 this.$router.push({path:'/main/login'})
-              })
+              },1000);
+              break;
+            case 222001:
+              this.$message.info('没有用户信息,正在返回上一级。。')
+              this.$router.push({path:'/main/login'})
               break;
             default:
               this.dengdai("没有匹配到相应用户，正在重新检测。。");

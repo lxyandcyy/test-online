@@ -60,8 +60,8 @@ export default {
       }).then(res => {
         switch (res.code) {
           case 200:
-            this.$router.push({path:'/main/face-detect', query:{ father: 'register'}});//跳转到人脸绑定页面
             this.$message.success(`${res.msg}`); //用户基本信息提交成功！
+            this.$router.push({path:'/main/face-detect', query:{ father: 'register'}});//跳转到人脸绑定页面
             break;
           case 400:
             this.$message.error(`${res.msg}`); //用户已存在！
