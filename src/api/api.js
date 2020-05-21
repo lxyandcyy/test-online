@@ -39,6 +39,7 @@ export default {
   EditPaper: paper.EditPaper,
   DelPaper: paper.DelPaper,
   SubmitExam: paper.SubmitExam,
+  PublishExamPaper:paper.PublishExamPaper,
 
   PracticePaperList: practice_paper.PracticePaperList,
   AddPracticePaper: practice_paper.AddPracticePaper,

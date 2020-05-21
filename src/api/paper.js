@@ -7,4 +7,5 @@ export default {
   EditPaper: (id) => post("http://localhost:6001/exam-paper/edit/"+id),
   DelPaper: (id) => post("http://localhost:6001/exam-paper/delete/"+id),
   SubmitExam: (data) => post("http://localhost:6001/exam-paper/submit", data),
+  PublishExamPaper:(id,body)=> post('http://localhost:6001/exam-paper/publish/'+id,body)//发布试卷
 };
