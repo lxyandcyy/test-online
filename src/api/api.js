@@ -7,6 +7,8 @@ import question from "./question";
 import paper from "./paper";
 import practice_paper from "./practice_paper";
 import subject from "./subject";
+import records from "./records";
+
 
 
 export default {
@@ -31,6 +33,7 @@ export default {
   SelQue: question.SelQue, //预览题目
   EditQue: question.EditQue,
   DelQue: question.DelQue,
+  GetOptions:question.GetOptions,
 
   // t_exam_paper表相关操作
   PaperList: paper.PaperList, //获取所有试卷
@@ -52,5 +55,7 @@ export default {
   AddSubject:subject.AddSubject,
   SelSubject:subject.SelSubject,
   UpdateSubject:subject.UpdateSubject,
-  DelSubject:subject.DelSubject
+  DelSubject:subject.DelSubject,
+
+  RecordsList:records.RecordsList
 };

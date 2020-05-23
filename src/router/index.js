@@ -14,6 +14,8 @@ import question from "@/router/question";
 import paper from "@/router/paper";
 import result from "@/router/result";
 import subject from "@/router/subject";
+import records from "@/router/records";
+
 
 
 Vue.use(VueRouter);
@@ -71,11 +73,14 @@ const router = new VueRouter({
         //考生主页
         {path: "home", name: "Home", component: () => import("@/views/Student/Home/Home"),},
         //错题列表页
-        {path: "mistake-list", name: "MistakeList", component: () => import("@/views/Student/Mistake/MistakeList"),},
+        {path: "mistake", name: "MistakeList", component: () => import("@/views/Student/Mistake/MistakeList"),},
         //智能训练页
         {path: "practice-list", name: "PracticeList", component: () => import("@/views/Student/Practice/PracticeList"),},
         //个人中心
         {path: "profile", name: "Profile", component: () => import("@/views/Student/Profile/Profile"),},
+          ...records,
+        //结果分析
+        {path: "result-analysis", name: "ResultAnalysis", component: () => import("@/views/Student/ResultAnalysis/ResultAnalysis"),},
       ],
     },
     //答题页面

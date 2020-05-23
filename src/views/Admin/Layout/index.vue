@@ -8,6 +8,16 @@
               app
       >
         <v-list>
+<!--          主页-->
+          <router-link :to="{path:'/layout/home'}">
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-home</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>主页</v-list-item-title>
+            </v-list-item>
+          </router-link>
+<!--          dashboard-->
           <v-list-group
                   v-for="item in dashboards"
                   :key="item.title"
@@ -16,6 +26,7 @@
                   no-action
           >
             <template v-slot:activator>
+
               <v-list-item-content>
                 <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item-content>
@@ -70,13 +81,8 @@ export default {
     return {
       dashboards:[
         {
-          action: 'dashboard',
-          title: '主页',
-        },
-        {
           action: 'account_box',
           title: '用户管理',
-          active: true,
           items: [
             { title: '学生列表' ,path:'/layout/student'},
             { title: '管理员列表' ,path:'/layout/admin'},

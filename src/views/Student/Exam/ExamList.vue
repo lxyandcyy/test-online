@@ -12,18 +12,43 @@
           hide-details
         ></v-text-field>
       </v-card-title>
-      <v-data-table :headers="headers" :items="desserts" :search="search">
+<!--      未答试卷-->
+      <v-data-table :headers="headers" :items="table" :search="search">
         <!-- 操作 -->
         <template v-slot:item.action="slotScope">
           <router-link
             :to="{
               path: '/exam-paper/do/'+slotScope.item.id
             }"
+            v-show="!hadDo(slotScope.item.id)"
           >
-            <v-btn color="primary" small>开始答题</v-btn>
+            <v-btn color="primary" small >开始答题</v-btn>
+          </router-link>
+          <router-link
+                  :to="{
+              path: '/exam-paper/record/'+slotScope.item.id
+            }"
+                  v-show="hadDo(slotScope.item.id)"
+          >
+            <v-btn color="green" small >查看答题卡</v-btn>
           </router-link>
         </template>
       </v-data-table>
+
+<!--      已答试卷-->
+<!--      <v-data-table :headers="headers" :items="table2">-->
+<!--        &lt;!&ndash; 操作 &ndash;&gt;-->
+<!--        <template v-slot:item.action="slotScope">-->
+<!--          <router-link-->
+<!--                  :to="{-->
+<!--              path: '/exam-paper/do/'+slotScope.item.id-->
+<!--            }"-->
+<!--                  :disabled="disabled"-->
+<!--          >-->
+<!--            <v-btn color="primary" small :disabled="disabled">开始答题</v-btn>-->
+<!--          </router-link>-->
+<!--        </template>-->
+<!--      </v-data-table>-->
     </v-card>
   </div>
 </template>
@@ -33,7 +58,6 @@ export default {
   name: "ExamList",
   data() {
     return {
-      subject: "语文",
       search: "",
       headers: [
         { text: "试卷名称", value: "name" },
@@ -41,7 +65,8 @@ export default {
         { text: "截止日期(Date)", value: "endTime" },
         { text: "操作", value: "action" },
       ],
-      desserts: [],
+      table: [],
+      hadDoPaper:[]
     };
   },
   created() {
@@ -52,7 +77,6 @@ export default {
       let d = [];
       this.$api.PaperList().then((res) => {
         console.log(res);
-
         res.data.forEach((item, index) => {
           if(item.isPublish===true){//只展示发布了的试卷
             d.push({
@@ -64,9 +88,14 @@ export default {
             });
           }
         });
-        this.desserts = d;
+        this.table = d;
       });
     },
+    // 判断某试卷是否已做
+    hadDo(examPaperId){
+      // 查询考试记录
+      return false
+    }
   },
 };
 </script>

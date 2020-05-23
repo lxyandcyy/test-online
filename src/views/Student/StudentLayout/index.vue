@@ -94,7 +94,9 @@ export default {
       { router: "/student-layout/home", name: "首页" },
       { router: "/student-layout/practice-list", name: "智能训练" },
       { router: "/student-layout/exam-list", name: "考试中心" },
-      { router: "/student-layout/mistake-list", name: "错题本" },
+      { router: "/student-layout/record/", name: "考试记录" },
+      { router: "/student-layout/result-analysis", name: "个人考试结果报告" },
+      { router: "/student-layout/mistake", name: "错题本" },
     ],
   }),
   methods: {
@@ -102,6 +104,8 @@ export default {
       if (router == "/main") {
         // 当点击‘退出’时,清除 token
         localStorage.clear();
+      }else if(router=='/student-layout/record/'){
+        router=router+this.$store.state.user.id
       }
       this.$router.push({ path: router });
     },
