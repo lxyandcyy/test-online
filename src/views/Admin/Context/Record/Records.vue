@@ -1,5 +1,5 @@
 <template>
-    <div id="record-list">
+    <div id="records">
         <v-card flat tile>
             <v-card-title>
                 考试记录
@@ -14,9 +14,9 @@
             </v-card-title>
             <v-data-table :headers="headers" :items="table" :search="search">
                 <!-- 操作 -->
-                <template v-slot:item.action="slotScope">
-                    <v-btn color="green" small @click="examResult($route.params.id, slotScope.item.id)">查看答题卡</v-btn>
-                </template>
+<!--                <template v-slot:item.action="slotScope">-->
+<!--                    <v-btn color="green" small @click="examResult($route.params.id, slotScope.item.id)">查看答题卡</v-btn>-->
+<!--                </template>-->
             </v-data-table>
         </v-card>
     </div>
@@ -24,7 +24,7 @@
 
 <script>
     export default {
-        name: "ExamList",
+        name: "Records",
         data() {
             return {
                 search: "",
@@ -34,7 +34,7 @@
                     { text: "耗费时间（s）", value: "spendTime" },
                     { text: "得分", value: "userScore" },
                     { text: "答题人", value: "userId" },
-                    { text: "操作", value: "action" },
+                    // { text: "操作", value: "action" },
                 ],
                 table: [],
             };
@@ -45,7 +45,7 @@
         methods: {
             searchRecords() {
                 let d = [];
-                this.$api.RecordsList(this.$route.params.id).then((res) => {
+                this.$api.RecordsList().then((res) => {
                     console.log(res);
                     res.data.forEach((item, index) => {
                         d.push({

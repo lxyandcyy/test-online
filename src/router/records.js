@@ -1,4 +1,6 @@
 export default [
-    //考试记录
-    {path: "record/:id", name: "Record", component: () => import("@/views/Student/Record/RecordList"),},
+    //单个用户考试记录
+    {path: "record/:id", name: "RecordList", component: () => import("@/views/Student/Record/RecordList"),},
+    //所有考试记录
+    {path: "records", name: "Records", component: () => import("@/views/Admin/Context/Record/Records"),},
 ];

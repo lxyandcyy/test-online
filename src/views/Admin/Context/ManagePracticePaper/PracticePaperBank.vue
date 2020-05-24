@@ -1,5 +1,5 @@
 <template>
-  <div id="practice-paper-bank">
+  <div id="practicePaper-bank">
     <v-card-title>
       智能训练试卷
       <v-spacer></v-spacer>
@@ -26,16 +26,6 @@
         >
           <v-btn class="mr-2" color="primary" fab small>
             查看
-          </v-btn>
-        </router-link>
-        <router-link
-          :to="{
-            path: '/practice-paper/edit',
-            query: { id: slotScope.item.practice_paper_id },
-          }"
-        >
-          <v-btn class="mr-2" color="orange" fab small dark>
-            编辑
           </v-btn>
         </router-link>
         <v-btn

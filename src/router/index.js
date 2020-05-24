@@ -5,13 +5,14 @@ import Layout from "@/views/Admin/Layout";
 import StudentLayout from "@/views/Student/StudentLayout";
 import Main from "@/views/Main";
 import Background from "@/views/Background";
-import { Message } from "element-ui";
-import Token from '@/utils/Token'
+import Message from '@/utils/message'
+
 
 import api from "../api/api"; // 导入api接口
 
 import question from "@/router/question";
 import paper from "@/router/paper";
+import practicePaper from "@/router/practicePaper";
 import result from "@/router/result";
 import subject from "@/router/subject";
 import records from "@/router/records";
@@ -58,8 +59,10 @@ const router = new VueRouter({
         {path: "admin", name: "Admin", component: () => import("@/views/Admin/Context/ManageUser/Admin"),},
         ...question,
         ...paper,
+        ...practicePaper,
         ...result,
-        ...subject
+        ...subject,
+        records[1],
       ],
     },
     //  考生主页面的布局/student-layout
@@ -78,7 +81,7 @@ const router = new VueRouter({
         {path: "practice-list", name: "PracticeList", component: () => import("@/views/Student/Practice/PracticeList"),},
         //个人中心
         {path: "profile", name: "Profile", component: () => import("@/views/Student/Profile/Profile"),},
-          ...records,
+          records[0],
         //结果分析
         {path: "result-analysis", name: "ResultAnalysis", component: () => import("@/views/Student/ResultAnalysis/ResultAnalysis"),},
       ],
@@ -101,7 +104,7 @@ router.beforeEach((to, from, next) => {
       api.verifyToken(log_token).then((res) => {
         // token已过期
         if (!res.valid) {
-          Message.error("你的身份验证已经过期，请重新登录", 2000);
+          Message.error("你的身份验证已经过期，请重新登录");
           next({ path: "/main" });
         } else {
           // token有效

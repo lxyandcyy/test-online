@@ -163,20 +163,19 @@
         this.correctOption=''
       },
       async submit() {
-        // 。。。。
-        // this.question.createUser=this.$store.state.user.id;
-        // let res=await this.$api.AddQue({
-        //   ...this.question,
-        //   ...this.options
-        // })
-        // console.log(res);
-        // if(res.code===200){
-        //   this.$message.success("题目新增成功！");
-        //   //   返回到‘题库列表’页面
-        //   this.$router.push({ path: "/layout/question-bank" });
-        // }else {
-        //   this.$message.error("提交失败，请检查网络！");
-        // }
+        this.question.createUser=this.$store.state.user.id;
+        let res=await this.$api.UpdateQue(this.$route.params.id,{
+          quesiont:this.question,
+          options:this.options
+        })
+        console.log(res);
+        if(res.code===200){
+          this.$message.success(`${res.msg}`);
+          //   返回到‘题库列表’页面
+          this.$router.push({ path: "/layout/question-bank" });
+        }else {
+          this.$message.error("提交失败，请检查网络！");
+        }
       },
     }
   };

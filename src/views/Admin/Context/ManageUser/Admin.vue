@@ -18,14 +18,6 @@
     >
       <!-- 操作 -->
       <template v-slot:item.action="slotScope">
-        <router-link :to="{ path: '/personal-grade/sel', query: { id: slotScope.item.id }}">
-          <v-btn class="mr-2" color="primary" fab small>
-            查看用户成绩
-          </v-btn>
-        </router-link>
-        <v-btn class="mr-2" color="orange" fab small dark  @click="editPassword(slotScope.item.id)">
-          编辑密码
-        </v-btn>
         <v-btn class="mr-2" color="error" fab small dark @click="deleteUser(slotScope.item.id)">
           删除
         </v-btn>
@@ -77,8 +69,13 @@ export default {
         this.table.desserts = d;
       });
     },
-    editPassword(id){},
-    deleteUser(id){}
+    deleteUser(userId){
+      this.$api.DelUser({id:userId}).then(res=>{
+        console.log(res)
+        this.$message.success(`${res.msg}`)
+        this.searchList()
+      })
+    }
   }
 };
 </script>

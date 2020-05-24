@@ -42,6 +42,16 @@
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
+
+<!--考试记录-->
+            <router-link :to="{path:'/layout/records'}">
+                <v-list-item>
+                    <v-list-item-icon>
+                        <v-icon>healing</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>考试记录</v-list-item-title>
+                </v-list-item>
+            </router-link>
         </v-list>
 
         <template v-slot:append>
@@ -99,7 +109,7 @@ export default {
           action: 'gavel',
           title: '试卷管理',
           items: [
-            { title: '智能训练试卷管理' ,path:'/layout/practice-paper'},
+            { title: '智能训练试卷管理' ,path:'/layout/practicePaper'},
             { title: '测试试卷管理' ,path:'/layout/exam-paper'},
           ],
         },

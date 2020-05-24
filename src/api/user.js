@@ -25,43 +25,22 @@ export default {
 
   /**
    * 用户人脸绑定注册
-   * @param user_id [用户名]
-   * @param group_id [用户组]
-   * @param access_token [验证]
-   * @param image_type [图片类型] Base64或其他
-   * @param image [图片]
-   * @returns
    */
   postRegFace: p => post("http://localhost:6001/user/regFace", p),
-
   /**
    * 人脸登录
-   * @param  user_id [用户名]
-   * @param  group_id_list [用户组]
-   * @param  access_token [验证]
-   * @param  image_type [图片类型] Base64或其他
-   * @param  image [图片]
-   * @returns  error_code  score
    */
   Login: p => post("http://localhost:6001/user/Login", p),
-
   /**
    * 人脸修改
-   * @param  user_id [用户名]
-   * @param  group_id [用户组]
-   * @param  access_token [验证]
-   * @param  image_type [图片类型] Base64或其他
-   * @param  image [图片]
-   * @returns
    */
   ChangeFace: p => post("http://localhost:6001/user/changeFace", p),
-
   // 所有用户列表
   AllUserInfo: () => get("http://localhost:6001/user/allUserInfo"),
-
   // 单个用户信息
   SelUser: g => get("http://localhost:6001/user/sel-user", g),
-
   // 修改当前用户密码
-  UpdateUser: p => post("http://localhost:6001/user/update-user", p)
+  UpdateUser: p => post("http://localhost:6001/user/update-user", p),
+
+  DelUser:body=>post("http://localhost:6001/user/delete", body)
 };

@@ -1,235 +1,221 @@
 <template>
   <div id="edit-paper">
-    <!-- 表单 -->
-    <el-form :model="form" ref="form" label-width="100px" :rules="rules">
-      <el-form-item label="学科" prop="subject_id" required>
-        <el-select v-model="form.subject_id" placeholder="请选择学科">
-          <!-- <el-option
-            v-for="(item, index) in QueType"
-            :key="index"
-            :value="item"
-            :label="item"
-          ></el-option> -->
-        </el-select>
-      </el-form-item>
-      <el-form-item label="试卷名称：" prop="name" required>
-        <el-input v-model="form.name" />
-        <el-button
-          type="text"
-          class="link-left"
-          style="margin-left: 20px"
-          size="mini"
-          @click="addQuestion()"
-        >
-          添加题目
-        </el-button>
-        <el-card
-          class="exampaper-item-box"
-          v-if="form.questionItems.length !== 0"
-        >
-          <el-form-item
-            :key="index"
-            :label="'题目' + (index + 1) + '：'"
-            v-for="(item, index) in form.questionItems"
-            style="margin-bottom: 15px"
-          >
-            <el-row>
-              <el-col :span="23">
-                <QuestionShow :question="item" />
-              </el-col>
-              <el-col :span="1">
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="form.questionItems.splice(index, 1)"
-                  >删除</el-button
-                >
-              </el-col>
-            </el-row>
-          </el-form-item>
-        </el-card>
-      </el-form-item>
-      <el-form-item label="时长：" prop="countdown" required>
-        <el-input v-model="form.countdown" placeholder="分钟" />
-      </el-form-item>
-      <!-- 事件按钮 -->
-      <el-form-item>
-        <el-button type="primary" @click="submitForm">提交</el-button>
-        <el-button @click="resetForm">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <v-row justify="center">
+      <v-col cols="12" sm="9" md="8" lg="6">
+        <v-card ref="form">
+          <v-card-text >
+            <v-select
+                    v-model="selectSubjectName"
+                    :items="subjectsName"
+                    label="选择学科"
+                    required
+                    @change="selectSubject"
+            ></v-select>
+            <v-text-field
+                    v-model="examPaper.name"
+                    label="试卷名称"
+                    required
+            ></v-text-field>
+            <!--            选项-->
+            <v-btn class="ma-2" tile color="green" dark @click.stop="dialog=true,searchQuestions()">添加题目</v-btn>
 
-    <!-- 添加题目弹出框 -->
-    <el-dialog :visible.sync="questionPage.showDialog" width="70%">
-      <!-- 题目查询栏 -->
-      <el-form :model="questionPage.queryParam" ref="queryForm" :inline="true">
-        <el-form-item label="ID：">
-          <el-input v-model="questionPage.queryParam.id" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="题干：">
-          <el-input
-            v-model="questionPage.queryParam.topic"
-            clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="queryForm">查询</el-button>
-        </el-form-item>
-      </el-form>
-      <!-- 题目列表 -->
-      <el-table
-        v-loading="questionPage.listLoading"
-        :data="questionPage.tableData"
-        @selection-change="handleSelectionChange"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%"
-      >
-        <el-table-column type="selection" width="35"></el-table-column>
-        <el-table-column prop="id" label="Id" width="60px" />
-        <el-table-column prop="subject_id" label="学科" width="70px" />
-        <el-table-column prop="topic" label="题干" show-overflow-tooltip />
-      </el-table>
-      <!-- <pagination
-        v-show="questionPage.total > 0"
-        :total="questionPage.total"
-        :page.sync="questionPage.queryParam.pageIndex"
-        :limit.sync="questionPage.queryParam.pageSize"
-        @pagination="search"
-      /> -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="questionPage.showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="confirmQuestionSelect"
-          >确定</el-button
-        >
-      </span>
-    </el-dialog>
+            <!--           题目导入-->
+            <v-dialog v-model="dialog" >
+              <v-card>
+                <v-card-title>
+                  题目列表
+                  <v-spacer></v-spacer>
+                  <v-text-field
+                          v-model="table.search"
+                          append-icon="mdi-magnify"
+                          label="输入内容查询"
+                          single-line
+                          hide-details
+                  ></v-text-field>
+                </v-card-title>
+                <v-data-table
+                        v-model="table.selected"
+                        :headers="table.headers"
+                        :items="table.desserts"
+                        :search="table.search"
+                        show-select
+                >
+                </v-data-table>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green"  @click.stop="dialog = false,improtQuestions()">
+                    导入题目
+                  </v-btn>
+                  <v-btn color="red"  @click="dialog = false">
+                    取消
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <!--            导入的所有题目 卡片展示-->
+            <v-col
+                    v-for="(item, i) in examPaper.questions"
+                    :key="i"
+                    cols="12"
+                    class="mx-auto"
+            >
+              <v-card color="#26c6da" >
+                <v-btn  tile color="red" dark style="position: absolute;right: 0" @click="examPaper.questions.splice(i,1)">x</v-btn>
+                <v-card-title>
+                  题号：{{item.id}}
+                  <v-spacer></v-spacer>
+                  题干： <v-card-subtitle>{{item.topic}} </v-card-subtitle>
+                  <v-spacer></v-spacer>
+                  分数：<v-text-field
+                        v-model="item.score"
+                        class="mx-4"
+                        max="100"
+                        min="1"
+                        step="1"
+                        style="width: 1px"
+                        type="number"
+                ></v-text-field>
+                </v-card-title>
+              </v-card>
+            </v-col>
+
+            <v-text-field
+                    v-model="examPaper.countDown"
+                    label="考试时长(单位分钟)"
+                    max="480"
+                    min="1"
+                    type="number"
+                    step="1"
+                    required
+            ></v-text-field>
+            <v-divider class="mt-12"></v-divider>
+            <!--            操作-->
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary"  @click="submit">提交</v-btn>
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-import QuestionShow from "@/components/Show";
 
-export default {
-  components: { QuestionShow },
-  created() {
-    //获取学科数据
-    // ......
-
-    let id = this.$route.query.id;
-    console.log("当前编辑的试卷id是：", id);
-
-    //获取试卷初始数据
-    this.$api
-      .SelPaper(id)
-      .then(res => {
-        console.log("当前编辑的试卷初始数据是：", res);
-        this.form = {
-          id: res.pap.id,
-          subject_id: res.pap.subject_id,
-          name: res.pap.name,
-          countdown: res.pap.countdown,
-          questionItems: res.questionItems
-        };
-        console.log(this.form);
-      })
-      .catch(err => console.log(err));
-  },
-  data() {
-    return {
-      form: {
-        id: null,
-        subject_id: 1,
-        name: "",
-        countdown: null,
-        questionItems: []
-      },
-      questionPage: {
-        multipleSelection: [],
-        showDialog: false,
-        queryParam: {
-          id: null,
-          subject_id: 1,
-          pageIndex: 1,
-          pageSize: 5
+  export default {
+    data() {
+      return {
+        examPaper:{
+          name:"",
+          countDown:0,
+          createUser:this.$store.state.user.id,
+          SubjectId:null,
+          questions:[
+            // {
+            //   id:40,
+            //   topic:'地球是不是圆的？',
+            //   score:10
+            // }
+          ]
         },
-        listLoading: true,
-        tableData: null, //所有题目
-        total: 0
-      },
-      rules: {
-        subject_id: [
-          { required: true, message: "请选择学科", trigger: "change" }
-        ],
-        name: [{ required: true, message: "请输入试卷名称", trigger: "blur" }],
-        countdown: [
-          { required: true, message: "请输入考试时长", trigger: "blur" }
-        ]
-      }
-    };
-  },
-  methods: {
-    addQuestion() {
-      this.search();
-      this.questionPage.showDialog = true;
-    },
-    search() {
-      //   翻页||加载题目列表
-      this.questionPage.queryParam.subject_id = this.form.subject_id; //添加题目的学科与试卷的学科对应
-      //   获取题库列表
-      this.$api.QueList().then(res => {
-        console.log("题库列表：", res);
-        this.questionPage.tableData = res;
-        // this.questionPage.total = res.length;
-        // this.questionPage.queryParam.pageIndex = res.length;
-        this.questionPage.listLoading = false;
-      });
-    },
-    // 重置
-    resetForm() {
-      this.$refs["form"].resetFields();
-    },
-    // 查询
-    queryForm() {},
-    //题目选择复选框改变时
-    handleSelectionChange(val) {
-      this.questionPage.multipleSelection = val;
-      console.log(val);
-    },
-    confirmQuestionSelect() {
-      this.questionPage.multipleSelection.forEach(q => {
-        this.form.questionItems.push(q);
-      });
-      this.questionPage.showDialog = false;
-    },
-    submitForm() {
-      //题目创建时间=当前提交时间
-      this.form.create_time = Date.now();
-
-      this.$refs.form.validate(valid => {
-        //如果表单填写完整
-        if (valid) {
-          this.$api
-            .EditPaper(this.form)
-            .then(res => {
-              console.log(res);
-              this.$message.success("试卷编辑成功！");
-              //   跳转到‘试卷列表’页面
-              this.$router.push({ path: "/layout/paper-bank" });
-            })
-            .catch(e => {
-              console.log(e);
-              this.$message.error({ content: "编辑试卷失败，请检查网络！" });
-            });
-        } else {
-          this.$message.info("请把表单填写完整！");
-          return false;
+        questionsList:[],
+        subjects:[],
+        subjectsName:[],
+        selectSubjectName:'',
+        dialog:false,
+        table:{
+          search:'',
+          selected:[],
+          headers:[
+            {
+              text:'ID',
+              value:'id'
+            },{
+              text:'题干',
+              value:'topic'
+            },{
+              text:'学科',
+              value:'SubjectId'
+            },{
+              text:'难度',
+              value:'difficult'
+            }
+          ],
+          desserts:[]
         }
-      });
+      };
+    },
+    async created() {
+      await this.searchPaperandQuestion();
+      await this.searchSubjects();//获取所有学科
+      await this.searchSubject(this.examPaper.SubjectId)//获取当前所选学科
+    },
+    methods: {
+      async searchPaperandQuestion(){
+        await this.$api.SelPaper(this.$route.params.id).then(res => {
+          this.examPaper={
+            ...res.data.examPaper,
+            questions: res.data.examPaper_question
+          }
+        });
+      },
+      async searchSubject(subjectId){
+        await this.$api.SelSubject(subjectId).then(res => {
+          console.log(res)
+          this.selectSubjectName = res.data.name;
+        });
+      },
+      async searchSubjects(){
+        let res= await this.$api.SubjectList()
+        this.subjects=res.data;
+        this.subjects.forEach(item=>{
+          this.subjectsName.push(item.name)
+        })
+      },
+      selectSubject(){
+        this.subjects.forEach(item=>{
+          if(item.name===this.selectSubjectName){
+            this.examPaper.SubjectId=item.id
+          }
+        })
+      },
+      improtQuestions(){
+        // 导入所选题目
+        console.log('导入题目:',this.table.selected)
+        this.examPaper.questions=this.table.selected;
+        this.examPaper.questions.forEach(item=>{
+          item.score=0
+        })
+      },
+      searchQuestions() {
+        //   获取所有题目
+        this.$api.QueList().then(res => {
+          console.log(res);
+          this.table.desserts = res.data;
+        });
+      },
+      submit() {
+        // this.$api.UpdatePaper(this.examPaper)
+        //         .then(res => {
+        //           console.log(res);
+        //           if(res.code===200){
+        //             this.$message.success("试卷新增成功！");
+        //             //   跳转到‘试卷列表’页面
+        //             setTimeout(()=>{
+        //               this.$router.push({ path: "/layout/exam-paper" });
+        //             },1000)
+        //           }
+        //         })
+        //         .catch(e => {
+        //           console.log(e);
+        //           this.$message.error({ content: "新增试卷失败，请检查网络！" });
+        //         });
+      }
     }
-  }
-};
+  };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+</style>

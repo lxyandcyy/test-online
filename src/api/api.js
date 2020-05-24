@@ -15,6 +15,9 @@ export default {
   verifyToken: (token) => {
     return get("http://localhost:6001/verify-token", token);
   }, //验证log_token
+  countData: () => {
+    return get("http://localhost:6001/statistic/countData");
+  }, //验证log_token
 
   // user_info表相关、登录注册相关操作
   getToken: user.getToken, //获取access_Token
@@ -26,12 +29,13 @@ export default {
   AllUserInfo: user.AllUserInfo, //所有用户列表
   SelUser: user.SelUser, //单个用户信息
   UpdateUser: user.UpdateUser, //修改当前用户信息
+  DelUser:user.DelUser,
 
   // t_quetion表相关操作
   QueList: question.QueList, //获取所有题目
   AddQue: question.AddQue, //新增题目
   SelQue: question.SelQue, //预览题目
-  EditQue: question.EditQue,
+  UpdateQue: question.UpdateQue,
   DelQue: question.DelQue,
   GetOptions:question.GetOptions,
 
@@ -39,7 +43,7 @@ export default {
   PaperList: paper.PaperList, //获取所有试卷
   AddPaper: paper.AddPaper, //新增试卷
   SelPaper: paper.SelPaper, //预览试卷
-  EditPaper: paper.EditPaper,
+  UpdatePaper: paper.UpdatePaper,
   DelPaper: paper.DelPaper,
   SubmitExam: paper.SubmitExam,
   PublishExamPaper:paper.PublishExamPaper,
@@ -57,5 +61,6 @@ export default {
   UpdateSubject:subject.UpdateSubject,
   DelSubject:subject.DelSubject,
 
-  RecordsList:records.RecordsList
+  RecordsList:records.RecordsList,
+  ExamResult:records.ExamResult,//查看某用户做该试卷的具体情况
 };
