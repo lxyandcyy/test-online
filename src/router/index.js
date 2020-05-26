@@ -57,6 +57,8 @@ const router = new VueRouter({
         {path: "student", name: "Student", component: () => import("@/views/Admin/Context/ManageUser/Student"),},
         //用户管理-->管理员列表
         {path: "admin", name: "Admin", component: () => import("@/views/Admin/Context/ManageUser/Admin"),},
+        //错题列表页
+        {path: "error-book", name: "ErrorBook", component: () => import("@/views/Admin/Context/Error/ErrorBook"),},
         ...question,
         ...paper,
         ...practicePaper,
@@ -74,13 +76,13 @@ const router = new VueRouter({
         //考试中心
         {path: "exam-list", name: "ExamList", component: () => import("@/views/Student/Exam/ExamList"),},
         //考生主页
-        {path: "home", name: "Home", component: () => import("@/views/Student/Home/Home"),},
+        {path: "home", name: "stuHome", component: () => import("@/views/Student/Home/Home"),},
         //错题列表页
-        {path: "mistake", name: "MistakeList", component: () => import("@/views/Student/Mistake/MistakeList"),},
+        {path: "error-book", name: "stuErrorBook", component: () => import("@/views/Student/Error/ErrorBook"),},
         //智能训练页
         {path: "practice-list", name: "PracticeList", component: () => import("@/views/Student/Practice/PracticeList"),},
         //个人中心
-        {path: "profile", name: "Profile", component: () => import("@/views/Student/Profile/Profile"),},
+        {path: "profile", name: "stuProfile", component: () => import("@/views/Student/Profile/Profile"),},
           records[0],
         //结果分析
         {path: "result-analysis", name: "ResultAnalysis", component: () => import("@/views/Student/ResultAnalysis/ResultAnalysis"),},

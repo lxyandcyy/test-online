@@ -43,23 +43,18 @@
                this.name=''
             },
             async submit() {
-                // this.createUser=this.$store.state.user.id;
-                // let res=await this.$api.AddQue({
-                //     topic:this.topic,
-                //     SubjectId:this.SubjectId,
-                //     analysis:this.analysis,
-                //     difficult:this.difficult,
-                //     createUser: this.createUser,
-                //     options:this.options
-                // })
-                // console.log(res);
-                // if(res.code===200){
-                //     this.$message.success("题目新增成功！");
-                //     //   返回到‘题库列表’页面
-                //     this.$router.push({ path: "/layout/question-bank" });
-                // }else {
-                //     this.$message.error("提交失败，请检查网络！");
-                // }
+                this.createUser=this.$store.state.user.id;
+                let res=await this.$api.UpdateSubject(this.$route.params.id,{
+                  name:this.name
+                })
+                console.log(res);
+                if(res.code===200){
+                    this.$message.success(`${res.msg}`);
+                    //   返回到‘学科列表’页面
+                    this.$router.push({ path: "/layout/subject" });
+                }else {
+                    this.$message.error("提交失败，请检查网络！");
+                }
             },
         }
     };

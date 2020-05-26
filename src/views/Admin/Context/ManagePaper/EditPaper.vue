@@ -197,7 +197,7 @@
         });
       },
       submit() {
-        // this.$api.UpdatePaper(this.examPaper)
+        // this.$api.UpdatePaper(,this.examPaper)
         //         .then(res => {
         //           console.log(res);
         //           if(res.code===200){

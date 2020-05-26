@@ -26,11 +26,6 @@
             查看
         </v-btn>
         </router-link>
-        <router-link :to="{path:'/layout/question/edit/'+slotScope.item.id}">
-          <v-btn class="mr-2" color="orange" fab small dark >
-            编辑
-          </v-btn>
-        </router-link>
         <v-btn class="mr-2" color="error" fab small dark @click="deleteQuestion(slotScope.item.id)">
             删除
         </v-btn>
@@ -41,7 +36,8 @@
 </template>
 
 <script>
-export default {
+  import TimeConverse from '@/utils/timeConverse'
+  export default {
   created() {
    this.searchList()
   },
@@ -51,7 +47,7 @@ export default {
         search: "",
         headers: [
           { text: "ID", align: "start", value: "id" },
-          { text: "学科", align: "start", value: "SubjectId" },
+          { text: "学科", align: "start", value: "subjectName" },
           { text: "题干", value: "topic" },
           { text: "难度", value: "difficult" },
           { text: "创建时间(Date)", value: "createTime" },
@@ -68,10 +64,15 @@ export default {
       let d = [];
       this.$api.QueList().then(res => {
         console.log(res);
-        res.data.forEach((item, index) => {
+        res.data.forEach(async (item, index) => {
           d.push({
             key: index,
-           ...item
+            id:item.id,
+            subjectName:item.Subject.name,
+            topic:item.topic,
+            difficult:item.difficult,
+            createTime:TimeConverse.utcToLocal(item.createTime),
+            createUser:item.User.userId,
           });
         });
         this.table.desserts = d;

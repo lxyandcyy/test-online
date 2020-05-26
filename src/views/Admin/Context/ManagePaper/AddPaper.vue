@@ -7,7 +7,7 @@
             <v-select
                     v-model="selectSubjectName"
                     :items="subjectsName"
-                    label="选择学科"5
+                    label="选择学科"
                     required
                     @change="selectSubject"
             ></v-select>

@@ -1,5 +1,5 @@
 <template>
-  <div id="mistake-list">
+  <div id="error-book">
     <v-card flat tile>
       <v-card-title>
         错题本

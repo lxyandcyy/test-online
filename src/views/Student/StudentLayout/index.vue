@@ -92,11 +92,10 @@ export default {
     tab: "/student-layout/home", //当前路由
     tabs: [
       { router: "/student-layout/home", name: "首页" },
-      { router: "/student-layout/practice-list", name: "智能训练" },
-      { router: "/student-layout/exam-list", name: "考试中心" },
-      { router: "/student-layout/record/", name: "考试记录" },
-      { router: "/student-layout/result-analysis", name: "个人考试结果报告" },
-      { router: "/student-layout/mistake", name: "错题本" },
+      // { router: "/student-layout/practice-list", name: "智能训练" },
+      { router: "/student-layout/exam-list", name: "在线测试" },
+      { router: "/student-layout/record/", name: "测试记录" },
+      { router: "/student-layout/result-analysis", name: "测试试卷分析报告" },
     ],
   }),
   methods: {

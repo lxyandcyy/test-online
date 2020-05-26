@@ -175,20 +175,23 @@
           switch (res.error_code) {
             case 0:
               this.detectTips = "人脸修改成功！";
-              this.$message.loading('人脸修改成功！',2,()=>{
-                this.$router.push({path:'/main'})
-              })
+              this.$message.success('人脸修改成功！')
+              this.$router.push({path:'/main'})
               break;
             case 222001:
               this.dengdai("没有检测到人脸，正在重新检测。。");
               break;
             case 222018:
-              this.$message.loading('没有用户信息,正在返回上一级。。',2,()=>{
+              this.$message.error('没有用户信息,正在返回上一级。。')
+              setTimeout(()=>{
                 this.$router.push({path:'/main/update-face'})
-              })
+              },1000)
               break;
             default:
               this.$message.error('未知错误！')
+              setTimeout(()=>{
+                this.$router.push({path:'/main/update-face'})
+              },1000)
               break;
           }
         })

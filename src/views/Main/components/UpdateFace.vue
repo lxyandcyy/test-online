@@ -62,9 +62,10 @@ export default {
         .then(res => {
           switch (res.code) {
             case 200:
-              this.$message.loading(`${res.msg}`, 2,()=> {
+              this.$message.success(`${res.msg}`)
+              setTimeout(()=>{
                 this.$router.push({path:'/main/face-detect',query:{father:'update-face'}})//跳转到人脸检测页面
-              });//用户验证成功
+              },1000)
               break;
             case 400:
               this.$message.error(`${res.msg}`); //用户不存在，请先注册！

@@ -123,7 +123,7 @@
                 this.options=res.data.options;
                 // 设置正确答案
                 this.options.forEach(item=>{
-                    if(item.isCorrect===true){
+                    if(item.isCorrect===true ||item.isCorrect===1){
                         this.correctOption=item.label
                     }
                 })

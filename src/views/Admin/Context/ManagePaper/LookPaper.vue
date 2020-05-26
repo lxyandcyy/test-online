@@ -27,7 +27,7 @@
                             <v-card color="#26c6da" >
                                 <v-btn  tile color="red" dark style="position: absolute;right: 0" @click="examPaper.questions.splice(i,1)">x</v-btn>
                                 <v-card-title>
-                                    题号：{{item.id}}
+                                    题号：{{item.questionId}}
                                     <v-spacer></v-spacer>
                                     题干： <v-card-subtitle>{{item.topic}} </v-card-subtitle>
                                     <v-spacer></v-spacer>
@@ -78,7 +78,7 @@
                     // SubjectId:null,
                     // questions:[
                     //     // {
-                    //     //   id:40,
+                    //     //   questionId:40,
                     //     //   topic:'地球是不是圆的？',
                     //     //   score:10
                     //     // }
@@ -98,6 +98,7 @@
         methods: {
             async searchPaperandQuestion(){
                 await this.$api.SelPaper(this.$route.params.id).then(res => {
+                    console.log(res)
                     this.examPaper={
                        ...res.data.examPaper,
                         questions: res.data.examPaper_question

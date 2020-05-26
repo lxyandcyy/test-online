@@ -18,18 +18,12 @@
     <v-data-table
             :headers="table.headers"
             :items="table.desserts"
-            :search="table.search"
-    >
+            :search="table.search">
       <!-- 操作 -->
       <template v-slot:item.action="slotScope">
         <router-link :to="{path:'/layout/exam-paper/look/'+slotScope.item.id}">
           <v-btn class="mr-2" color="primary" fab small >
             查看
-          </v-btn>
-        </router-link>
-        <router-link :to="{path:'/layout/exam-paper/edit/'+slotScope.item.id}">
-          <v-btn class="mr-2" color="orange" fab small dark >
-            编辑
           </v-btn>
         </router-link>
         <v-btn class="mr-2" color="green" fab small
@@ -119,7 +113,7 @@ export default {
         headers: [
           { text: "ID", align: "start", value: "id" },
           { text: "试卷名称", value: "name" },
-          { text: "学科", align: "start", value: "SubjectId" },
+          { text: "学科", align: "start", value: "subjectName" },
           { text: "创建人", value: "createUser" },
           { text: "创建时间(Date)", value: "createTime" },
           { text: "发布时间(Date)", value: "startTime" },
@@ -149,11 +143,11 @@ export default {
           key: index,
           id: item.id,
           name:item.name,
-          SubjectId: item.SubjectId,
-          createUser: item.createUser,
-          createTime: item.createTime,
-          startTime: item.startTime,
-          endTime: item.endTime,
+          subjectName: item.Subject.name,
+          createUser: item.User.userId,
+          createTime: TimeConverse.utcToLocal(item.createTime),
+          startTime: TimeConverse.utcToLocal(item.startTime),
+          endTime: TimeConverse.utcToLocal(item.endTime),
           isPublish: item.isPublish===true? '是':'否',
         });
       });

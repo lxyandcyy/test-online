@@ -10,9 +10,8 @@
             :items="filterQuestion.subjects_name"
             attach
             chips
-            label="科目："
-            multiple
-          ></v-select>
+            label="科目：">
+          </v-select>
         </v-col>
 
         <!-- 题目数量 -->
@@ -25,14 +24,14 @@
           label="题目数量："
         ></v-slider>
         <!-- 题目难度 -->
-        <v-rating
+       难度 <v-rating
           v-model="filterQuestion.difficult"
           color="yellow darken-3"
           background-color="grey darken-1"
           empty-icon="$ratingFull"
           hover
           dense
-        ></v-rating>
+        >难度</v-rating>
 
         <v-btn rounded color="warning" class="mt-5" @click="addPracticePaper"
           >生成试卷</v-btn
@@ -80,11 +79,12 @@ export default {
         //通过以下三种条件筛选题目，从而生成试卷
         practice_paper_id: null,
         practice_paper_name: null,
-        subjects_id: [],
-        select_subjects: [],
+        subjects: [],
+        select_subjects_id:[],//
         subjects_name: [],
-        question_count: 0,
-        difficult: 0,
+        select_subjects: [],
+        question_count: 0,//
+        difficult: 0,//
         tickArray: [0, 1, 2, 3, 4, 5, 6],
       },
       //试卷列表
@@ -102,13 +102,14 @@ export default {
     };
   },
   created() {
-    this.searchList(); //获取所有智能试卷
+    this.searchPracticePapers(); //获取所有智能试卷
+    this.searchSubjects()
   },
   methods: {
-    async searchList() {
+    async searchPracticePapers() {
       let d = [];
       let res = await this.$api.PracticePaperList();
-      console.log("试卷列表：", res);
+      console.log( res);
       res.forEach((item, index) => {
         d.push({
           practice_paper_id: item.practice_paper_id,
@@ -119,9 +120,15 @@ export default {
         });
       });
       this.table.desserts = d;
-
-      // 获取学科数据....待做
-      this.filterQuestion.subjects_name = ["数据结构", "高数", "计算机网络"];
+    },
+    searchSubjects(){
+      this.$api.SubjectList().then(res => {
+        console.log(res)
+        this.filterQuestion.subjects = res.data;
+        res.data.forEach(item=>{
+          this.filterQuestion.subjects_name.push(item.name)
+        })
+      });
     },
     async generatePracticePaper(conditions) {
       let res = await this.$api.AddPracticePaper(conditions);
@@ -130,12 +137,13 @@ export default {
     async addPracticePaper() {
       this.filterQuestion.subjects_id = [];
       this.filterQuestion.select_subjects.forEach((item) => {
-        this.filterQuestion.subjects_id.push(
-          this.filterQuestion.subjects_name.indexOf(item)
-        );
+        let i= this.filterQuestion.subjects_name.indexOf(item)
+        this.filterQuestion.select_subjects_id.push(this.filterQuestion.subjects[i].id);
       });
-      await this.generatePracticePaper(this.filterQuestion);
-      this.searchList();
+      let res=await this.generatePracticePaper(this.filterQuestion);
+      console.log(res)
+      this.searchPracticePapers();
+      this.searchSubjects()
     },
   },
 };

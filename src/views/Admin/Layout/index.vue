@@ -109,7 +109,7 @@ export default {
           action: 'gavel',
           title: '试卷管理',
           items: [
-            { title: '智能训练试卷管理' ,path:'/layout/practicePaper'},
+            // { title: '智能训练试卷管理' ,path:'/layout/practicePaper'},
             { title: '测试试卷管理' ,path:'/layout/exam-paper'},
           ],
         },
@@ -118,7 +118,6 @@ export default {
           title: '考试结果分析',
           items: [
             { title: '试卷成绩分析' ,path:'/layout/paper-grade'},
-            { title: '用户成绩分析',path:'/layout/all-grade' },
           ],
         },
         {

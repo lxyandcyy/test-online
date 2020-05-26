@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  import TimeConverse from '@/utils/timeConverse'
 export default {
   created() {
     this.searchList();
@@ -59,7 +60,7 @@ export default {
               id: item.id,
               name: item.userId,
               user_type: item.userType,
-              reg_time: item.regTime,
+              reg_time: TimeConverse.utcToLocal(item.regTime),
               password: item.password
             });
           }

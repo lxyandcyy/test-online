@@ -2,7 +2,7 @@ export default [
     // 学科管理-->学科列表  路径：/layout/subject
     {
         path: "subject",
-        name: "QuestionBank",
+        name: "Subject",
         component: () =>
             import("@/views/Admin/Context/ManageSubject/Subject"),
     },
